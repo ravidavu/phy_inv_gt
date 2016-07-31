@@ -111,7 +111,7 @@ public class ProcessDaoImpl implements ProcessDao {
 		if (rs.next()) {
 			task_id = rs.getInt("task_id");
 		}
-		sql = "INSERT INTO PHY_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?)";
+		sql = "INSERT INTO PHY_INV_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?)";
 		return jdbcTemplate.update(sql, taskId, new Date(), task_id);
 	}
 

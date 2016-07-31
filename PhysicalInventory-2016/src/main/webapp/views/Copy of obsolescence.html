@@ -1,0 +1,152 @@
+<div id="skueditdiv" class=" " style="margin-bottom: 5px;" >
+	<div class="">
+		<div class=" row">
+			<div class="col-md-2" style="float: right">
+			</div>
+		</div>
+	</div>
+	<div class="" style="">
+		<table class="table table-striped table-hover table-bordered" data-toggle="table"  style="width:84%;margin-left:8%;border:1px;border-color: black;">
+			<tbody>
+				<tr style="width:100%">
+					<td style=" important;background-color: white; margin-bottom: 0px !important;padding-bottom: 0px !important;margin-left: 0px !important;padding-left: 0px !important;margin-top: 0px !important;padding-top: 0px !important;padding-right: 0px !important;">
+						<div style="background-color: #e0ecff; width:100%;height:67px;">
+							<center data-toggle="collapse" data-target="#collapse3" style="font-size: 20px;"> Obsolescence  </center>
+							<div class="row" id="tb" style="margin-left: 3px !important;margin-top: 5px;">
+								<div class="input-group col-lg-6 col-md-8 col-sm-12"style="float: left;padding-left: 15px;padding-right: 16px;width: 21%;">
+									<input class="form-control col-lg-6 col-md-6 col-sm-6" style="height: 32px;" data-ng-model="searchItem" ng-change="searchProcess()"
+									placeholder="Search Item By Id" type="search" /> 
+									<span class="glyphicon glyphicon-search" style="position: absolute;margin-top: 9px;margin-left: -21px;z-index: 100;">
+									</span>
+								</div>
+								<p class="input-group col-lg-6 col-md-12 col-sm-12"style="width:15%">
+							      <input type="text" style="height: 32px;" class="form-control col-lg-6 col-md-6 col-sm-6" uib-datepicker-popup ng-model="date"
+							             is-open="datepickerOptions.isOpened" show-button-bar="false"
+							             datepicker-options="datepickerOptions" ng-required="true" close-text="Close"/>
+							      <span class="input-group-btn">
+							      	<button type="button" class="btn btn-default"
+							                    ng-click="datepickerOptions.isOpened=!datepickerOptions.isOpened">
+							        	<i class="glyphicon glyphicon-calendar"></i>
+							       	</button>
+							      </span>
+							  	</p>
+						</div>
+					</div>
+					<table id="table3" 
+							class="table table-striped table-hover table-bordered"
+							style="margin-bottom: 0px; width: 100% !important;"
+							data-toggle="table">
+								    <thead>
+								   		<tr class="theader">
+									      	<th>Sku's List</th>
+									      	<th>Action</th>
+									      	<th>Sku's List</th>
+									      	<th>Action</th>
+									      	<th>Sku's List</th>
+									      	<th>Action</th>
+									      	<th>Sku's List</th>
+									      	<th>Action</th>
+									      	<th style="width:14%;">Sku's List</th>
+									      	<th style="width:10%">Action</th>
+								    	</tr>
+								    </thead>
+								    <tbody> 
+								    	<tr class="tdata"
+								    		ng-repeat="sku in pagedSearchResult " 
+								    		ng-if="$index%5== 0" ng-click="setSelectedObsolescence(sku)" 
+								    		ng-class="{selected : sku === idSelectedObsolescence}">
+								    		
+								    	<span>
+											<td>{{pagedSearchResult[$index].skuNo}}</td>
+											<td class="center"><input type="checkbox"
+												ng-if="pagedSearchResult[$index].skuNo" ng-model="pagedSearchResult[$index].isChecked" /></td>
+										</span>
+										<span>
+											<td>{{pagedSearchResult[$index+1].skuNo}}</td>
+											<td class="center"><input type="checkbox"
+												ng-if="pagedSearchResult[$index+1].skuNo" ng-model="pagedSearchResult[$index+1].isChecked" /></td>
+										</span>
+									 	<span>
+											<td>{{pagedSearchResult[$index+2].skuNo}}</td>
+											<td class="center" ><input type="checkbox"
+												ng-if="pagedSearchResult[$index+2].skuNo" ng-model="pagedSearchResult[$index+2].isChecked" /></td>
+										</span> 
+										<span>
+											<td>{{pagedSearchResult[$index+3].skuNo}}</td>
+											<td class="center" ><input type="checkbox"
+												ng-if="pagedSearchResult[$index+3].skuNo" ng-model="pagedSearchResult[$index+3].isChecked" /></td>
+										</span>
+										<span>
+											<td>{{pagedSearchResult[$index+4].skuNo}}</td>
+											<td class="center" ><input type="checkbox"
+												ng-if="pagedSearchResult[$index+4].skuNo" ng-model="pagedSearchResult[$index+4].isChecked" /></td>
+										</span>
+								    </tr>
+								    <tr>
+								    	<td colspan="10" style="padding-top: 0px;padding-left: 0px;padding-bottom: 0px;">
+								    	<uib-pagination 
+								    		style="padding-bottom: 0px;margin-bottom: 0px;margin-top: 0px;" 
+								    		data-ng-hide="skus.length == '0'" data-ng-model="pageNo"  
+								    		items-per-page="recordsPerPage" 
+								    		total-items="skus.length/5" 
+								    		data-ng-click="searchPageChange(pageNo)" max-size="5" class="pagination-sm" 
+								    		boundary-links="true" rotate="false" num-pages="numPages">
+								    		</uib-pagination>
+								    		<span style="float: right; margin-top: 5px;margin-bottom:5px;">Displaying {{startIndex+1}} to {{startIndex+pagedSearchResult.length}} of {{skus.length}} items</span>
+								    		<br>
+								    		<span style="float: right; margin-top: 0px;margin-bottom:5px;">
+										    	<span style="float: right; margin-top: 0px;margin-bottom:5px;">
+										    			Items Per Page<select class="selectpicker" 
+										    			data-ng-model="recordsPerPage" data-ng-change="dispalyData(recordsPerPage)">
+														    <option>10</option>
+														    <option>25</option>
+														    <option>50</option>
+														    <option>75</option>
+												    	</select>
+												  </span>
+										    	
+										    	<span style="float:right;margin-top:0px;margin-bottom:5px;"> Select All   
+										    		<input type="checkbox" ng-checked="removeCheck1" 
+										    				ng-model="selectCheck" data-ng-click="selectAll(selectCheck)"/></span>
+		  										<span style="float:right;margin-top:0px;margin-bottom:5px;">Remove All   
+		  											<input type="checkbox" ng-checked="removeCheck2" 
+		  													ng-model="removeCheck" data-ng-click="removeAll(removeCheck)"/></span>
+		  									</span>
+								    	</td>
+								    </tr>
+								 </tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table> 
+			<button type="button" class="btn btn-primary  btn-group" ng-click="exportData()" style="margin-right:8%;float:right;"><img src="images/excel-viewer.png" style="height:25px"/>Export to Excel</button>
+			<!-- <button type="button" class="btn btn-primary  btn-group" ng-click="tableExport()">Export to PDF</button> -->
+		</div>
+			<form class="digits" name="digits"  novalidate >
+				<div class="row form-group"style="margin-left:7%;">
+					<p class="alert" ng-show="digits.text1.$error.pattern" style ="color: red;margin-bottom:0px;padding-bottom: 0px;padding-top: 0px;margin-top: 0PX;">You cannot enter special characters other than ','.</p>
+						<div class="col-md-6 col-lg-6 col-sm-6 asd top-buffer" style="margin-top: 0.5%;">
+						   <textarea name="text1" class="form-control" required ng-pattern="/^[a-zA-Z0-9,]*$/"  rows="5" placeholder="These notes are for your reference only."ng-model="csvSkuList" style="resize: none;"></textarea>
+						 </div>
+						<div class=" col-md-6 col-lg-6 col-sm-6 top-buffer" style="margin-top: 7.3%;">
+						    <button type="button" /*ng-disabled="!digits.$valid" */class="btn btn-primary btn-group" ng-click="saveSkus(csvSkuList)">Save</button>
+						    <button type="button" class="btn btn-primary disabled btn-group">Create</button>
+						</div>
+				</div>
+		</form>
+	</div>
+<script>
+$(document).ready(function() {
+	$("#obsolescenceLi").click(function(){
+         $("#obsolescenceLi").addClass("active");
+         $("#dashboardLi").removeClass("active");
+         $("#costingLi").removeClass("active");
+    });
+});
+</script>			
+<style>
+.selected {
+  background-color: #ffff80 !important;
+}
+</style>			

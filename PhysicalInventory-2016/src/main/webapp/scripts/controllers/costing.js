@@ -10,13 +10,8 @@ angular.module('inventoryApp')
   $scope.fetchAllProcess = function() {
     $http.get("getAllStores").then(function(response){
       $scope.stores = response.data;
-      // $scope.gridOptions.data = $scope.stores;
       
        $scope.dispalyData($scope.recordsPerPage);
-      /* console.log("============== ");
-       console.log($scope.stores);
-       console.log($scope.recordsPerPage);
-       console.log( $scope.dispalyData);*/
 
     });
   };
@@ -25,7 +20,6 @@ angular.module('inventoryApp')
     $scope.idSelectedCosting = null;
 	 $scope.setSelectedCosting = function(idSelectedCosting) {
 	       $scope.idSelectedCosting = idSelectedCosting;
-	       //console.log(idSelectedCosting);
 	    }
 
     $scope.dispalyData = function(size){
@@ -34,7 +28,6 @@ angular.module('inventoryApp')
 
       $scope.searchResult = $scope.stores;
       $scope.pagedSearchResult = $scope.searchResult.slice(0, $scope.recordsPerPage*5);
-      //console.log($scope.pagedSearchResult);
       $scope.startIndex = (($scope.pageNo - 1) * $scope.recordsPerPage * 5);
 		$scope.endIndex  = $scope.startIndex + $scope.recordsPerPage * 5;
 		console.log("hi:"+$scope.startIndex+":"+$scope.endIndex );
@@ -56,7 +49,6 @@ angular.module('inventoryApp')
 			
 			if ($scope.pagedSearchResult1.length > 0) {
 				console.log("hi000:"+$scope.searchItem);
-				//$scope.searchResult = $scope.stores;
 				$scope.pagedSearchResult = $scope.pagedSearchResult1
 						.slice(0, $scope.recordsPerPage*5);
 				$scope.stores = $scope.pagedSearchResult1;
@@ -75,28 +67,14 @@ angular.module('inventoryApp')
 		}
 		
 	}
-   /* $scope.gridOptions = {
-      headerTemplate: 'views/templates/process-header.html',
-      paginationPageSizes: [10,25, 50, 75],
-      paginationPageSize: 10,
-      columnDefs: [
-        {name: 'storeNo', title: 'Stores List'},
-        {name: 'isChecked', title: 'Checkbox', cellTemplate: 'views/templates/process-checkbox.html'}
-      ]
-
-    };*/
-
+    
     $scope.searchPageChange = function(pagenum) {
-    	console.log("coming to search page changes");
-    	console.log(pagenum);
     var begin = ((pagenum - 1) * $scope.recordsPerPage*5), end = begin
         + $scope.recordsPerPage*5;
-    console.log("begin "+begin +" end >>> "+end);
     $scope.pagedSearchResult = $scope.stores.slice(begin,
         end);
     $scope.startIndex = (($scope.pageNo - 1) * $scope.recordsPerPage * 5);
 	$scope.endIndex  = $scope.startIndex + $scope.recordsPerPage * 5;
-	console.log("hi:"+$scope.startIndex+":"+$scope.endIndex );
   };
 
     $scope.datepickerOptions = {
@@ -115,25 +93,12 @@ angular.module('inventoryApp')
     $scope.saveStores = function (csv) {
       var stores = csv.split(',');
 
-     /* stores1= stores.map(function (s) {
-        return parseInt(s);
-      });*/
-
-    //  $timeout(function () {
         $scope.stores.forEach(function (s) {
           if (stores.indexOf(s.storeNo) != -1) {
             s.isChecked = true;
           }
         });
-    //  });
-    /*$scope.gridOptions.data = [];
-      $scope.gridOptions.data = $scope.stores;
-       $scope.refresh = true;
-        $timeout(function() {
-        $scope.refresh = false;
-       }, 0);*/
-     // $scope.gridOptions.api.refreshView();
-
+   
       $scope.csvStoreList = '';
     };
 
@@ -147,13 +112,6 @@ angular.module('inventoryApp')
                $scope.removeCheck2 = false;
          });
 
-      /*   $scope.gridOptions.data = [];
-      $scope.gridOptions.data = $scope.stores;
-       $scope.refresh = true;
-        $timeout(function() {
-        $scope.refresh = false;
-       }, 0);*/
-       // $scope.csvStoreList = $scope.selectedData.toString();
       }else{
          $scope.stores.forEach(function (s) {
                s.isChecked = false;
@@ -174,5 +132,13 @@ angular.module('inventoryApp')
          });
      }
      };
+     $scope.validateDate = function(){
+			if($scope.date){
+				$scope.isvalidDate = false;
+			}else{
+				$scope.isvalidDate = true;
+				
+			}
+		}
 
   });

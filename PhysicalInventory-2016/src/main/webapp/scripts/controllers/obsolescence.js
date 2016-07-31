@@ -111,22 +111,42 @@ angular.module('inventoryApp')
         doc.saveAs('Test.pdf');
     };
     
-    
+    $scope.validateDate = function(){
+		console.log("hhhhhhhhhhhhhhhhhhhhhh");
+		if($scope.date){
+			console.log("hhhhhhhhhhhhhhhhhhhhhh111111111");
+			$scope.isvalidDate = false;
+		}else{
+			console.log("hhhhhhhhhhhhhhhhhhhhhh2222222222");
+			//$scope.msg="Please enter  date .";
+			$scope.isvalidDate = true;
+			
+		}
+	}
     $scope.saveSkus = function (csv) {
-      var skus = csv.split(',');
-
-      /*skus = skus.map(function (s) {
-        return parseInt(s);
-      });
-*/
-    //  $timeout(function () {
-        $scope.skus.forEach(function (s) {
-          if (skus.indexOf(s.skuNo) > -1) {
-            s.isChecked = true;
-          }
-        });
-    //  });
-      $scope.csvSkuList = '';
+    	console.log("hi obs:::::"+$scope.date);
+      //var skus = csv.split(',');
+    	$scope.isvalidDate = false;
+		if($scope.date){
+	      var skus = "";
+	      console.log("Date:::::::::"+$scope.date);
+	      /*skus = skus.map(function (s) {
+	        return parseInt(s);
+	      });
+	*/
+	    //  $timeout(function () {
+	        $scope.skus.forEach(function (s) {
+	          if (skus.indexOf(s.skuNo) > -1) {
+	            s.isChecked = true;
+	          }
+	        });
+	    //  });
+	      $scope.csvSkuList = '';
+		}else{
+			console.log("IN ELSE:::::");
+			$scope.isvalidDate = true;
+			$scope.msg="Please enter  date .";
+		}
     };
 
      $scope.selectedData = [];
@@ -163,6 +183,5 @@ angular.module('inventoryApp')
      }
       
      };
-
 
   });
