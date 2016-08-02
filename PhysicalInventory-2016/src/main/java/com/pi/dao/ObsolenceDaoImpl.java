@@ -42,14 +42,10 @@ public class ObsolenceDaoImpl implements ObsolescenceDao {
 						List<Obsolescence> oList = new ArrayList<Obsolescence>();
 						int i=0;
 						StringBuffer skuNo= new StringBuffer("");
-						int oid = 0;
 						while (rst.next()) {
 							i=i+1;
 							skuNo.append(" "+rst.getString("STORE_SKU"));
-							
-								
 							Obsolescence obsolen = new Obsolescence();
-							//obsolen.setoId(rst.getInt("oid"));
 							obsolen.setSkuNo(rst.getString("STORE_SKU"));
 							oList.add(obsolen);
 							

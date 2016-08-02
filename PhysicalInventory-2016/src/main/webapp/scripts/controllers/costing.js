@@ -16,6 +16,18 @@ angular.module('inventoryApp')
     });
   };
   
+  
+  
+  $scope.fetchReport = function() {
+	  console.log("inventoryReport::::::::");
+    $http.get("listOfRpt").then(function(response){
+      $scope.reportlist = response.data;
+      
+console.log("Report Len:::"+$scope.stores.length);
+    });
+  };
+  $scope.fetchReport();
+  
   $scope.fetchAllProcess();
     $scope.idSelectedCosting = null;
 	 $scope.setSelectedCosting = function(idSelectedCosting) {
@@ -71,6 +83,7 @@ angular.module('inventoryApp')
     $scope.searchPageChange = function(pagenum) {
     var begin = ((pagenum - 1) * $scope.recordsPerPage*5), end = begin
         + $scope.recordsPerPage*5;
+    console.log("begin "+begin +" end >>> "+end);
     $scope.pagedSearchResult = $scope.stores.slice(begin,
         end);
     $scope.startIndex = (($scope.pageNo - 1) * $scope.recordsPerPage * 5);

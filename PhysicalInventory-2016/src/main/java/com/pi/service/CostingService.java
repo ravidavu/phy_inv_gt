@@ -9,6 +9,4 @@ public interface CostingService {
 
 	public List<Costing> getAllStores();
 
-	
-
 }

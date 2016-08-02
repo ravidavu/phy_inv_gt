@@ -15,7 +15,6 @@ public class ProcessServiceImpl implements ProcessService {
 
 	@Override
 	public void updateStore(StoreProcess process) {
-		System.out.println("*****updateStore"+processDao);
 		processDao.updateStore(process);
 
 	}
@@ -28,11 +27,6 @@ public class ProcessServiceImpl implements ProcessService {
 
 	@Override
 	public int storeTaskId(String taskId) {
-		System.out.println("*****storeTaskId"+processDao);
-		if(processDao!=null){
-		return processDao.storeTaskId(taskId);
-		}else{
-			return 1;
+			return processDao.storeTaskId(taskId);
 		}
-	}
 }

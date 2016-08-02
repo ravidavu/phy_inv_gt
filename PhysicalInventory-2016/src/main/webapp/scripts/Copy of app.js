@@ -48,7 +48,7 @@ angular
       .state('inventoryReport', {
         url: '/inventoryReport',
         templateUrl: 'views/inventoryReport.html',
-        controller: 'CostingCtrl'
+        controller: 'ObsolescenceCtrl'
       });
 
   })
