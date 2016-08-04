@@ -46,10 +46,10 @@ angular
         controller: 'CostingCtrl'
       })
       .state('inventoryReport', {
-        url: '/inventoryReport',
-        templateUrl: 'views/inventoryReport.html',
-        controller: 'CostingCtrl'
-      });
+          url: '/inventoryReport',
+          templateUrl: 'views/inventoryReport.html',
+          controller: 'InventoryReportCtrl'
+        });
 
   })
   .run(function ($rootScope, $state){

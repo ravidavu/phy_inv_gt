@@ -1,8 +1,8 @@
 package com.pi.dao;
 
 import java.util.List;
-import com.pi.model.Report;
+import java.util.Map;
 
 public interface ReportDao {
-	public List<Object> getReport(int storeId);
+	public Map<String,List<String>> getReport(int storeId);
 }

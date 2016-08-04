@@ -1,22 +1,24 @@
 package com.pi.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.pi.dao.ProcessDao;
 import com.pi.dao.ReportDao;
-import com.pi.model.Report;
-
+import com.pi.dao.ReportDaoImpl;
+@Service("rptService")
 public class ReportServiceImpl implements ReportService{
 
 	@Autowired
 	private ReportDao reportDao;
-	
+
 	@Override
-	public List<Object> getReports(int storeId) {
-		System.out.println("reportDao is "+reportDao);
+	public Map<String, List<String>> getReports(int storeId) {
+		// TODO Auto-generated method stub
 		return reportDao.getReport(storeId);
 	}
+	
 
 }
