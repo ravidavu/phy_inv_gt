@@ -70,6 +70,8 @@ public class ReportDaoImpl implements ReportDao {
 			floorList.add(formatNumber(floorRs
 					.getString("TY_INV_SHRINK_TO_SLS")));
 			floorList.add(formatNumber(floorRs
+					.getString("CURRENT_YEAR_OBS")));
+			floorList.add(formatNumber(floorRs
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			floorList.add(formatNumber(floorRs
 					.getString("ADJ_CURRENT_YEAR_OBS")));
@@ -127,6 +129,8 @@ public class ReportDaoImpl implements ReportDao {
 			sparyList.add(formatNumber(sparyRS
 					.getString("TY_INV_SHRINK_TO_SLS")));
 			sparyList.add(formatNumber(sparyRS
+					.getString("CURRENT_YEAR_OBS")));
+			sparyList.add(formatNumber(sparyRS
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			sparyList.add(formatNumber(sparyRS
 					.getString("ADJ_CURRENT_YEAR_OBS")));
@@ -181,6 +185,8 @@ public class ReportDaoImpl implements ReportDao {
 					.getString("TY_INV_SHRINK_3710_A")));
 			paintList.add(formatNumber(paintRS
 					.getString("TY_INV_SHRINK_TO_SLS")));
+			paintList.add(formatNumber(paintRS
+					.getString("CURRENT_YEAR_OBS")));
 			paintList.add(formatNumber(paintRS
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			paintList.add(formatNumber(paintRS
@@ -246,6 +252,8 @@ public class ReportDaoImpl implements ReportDao {
 					.getString("TY_INV_SHRINK_3710_A")));
 			brushRollerList.add(formatNumber(brushRollerRS
 					.getString("TY_INV_SHRINK_TO_SLS")));
+			brushRollerList.add(formatNumber(brushRollerRS
+					.getString("CURRENT_YEAR_OBS")));
 			brushRollerList.add(formatNumber(brushRollerRS
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			brushRollerList.add(formatNumber(brushRollerRS
@@ -317,6 +325,8 @@ public class ReportDaoImpl implements ReportDao {
 			assocProdcutsList.add(formatNumber(assocProdcutsRS
 					.getString("TY_INV_SHRINK_TO_SLS")));
 			assocProdcutsList.add(formatNumber(assocProdcutsRS
+					.getString("CURRENT_YEAR_OBS")));
+			assocProdcutsList.add(formatNumber(assocProdcutsRS
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			assocProdcutsList.add(formatNumber(assocProdcutsRS
 					.getString("ADJ_CURRENT_YEAR_OBS")));
@@ -387,6 +397,8 @@ public class ReportDaoImpl implements ReportDao {
 			wallCoveringList.add(formatNumber(wallCoveringRS
 					.getString("TY_INV_SHRINK_TO_SLS")));
 			wallCoveringList.add(formatNumber(wallCoveringRS
+					.getString("CURRENT_YEAR_OBS")));
+			wallCoveringList.add(formatNumber(wallCoveringRS
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			wallCoveringList.add(formatNumber(wallCoveringRS
 					.getString("ADJ_CURRENT_YEAR_OBS")));
@@ -454,6 +466,8 @@ public class ReportDaoImpl implements ReportDao {
 					.getString("TY_INV_SHRINK_3710_A")));
 			windowTreatList.add(formatNumber(windowTreatRS
 					.getString("TY_INV_SHRINK_TO_SLS")));
+			windowTreatList.add(formatNumber(windowTreatRS
+					.getString("CURRENT_YEAR_OBS")));
 			windowTreatList.add(formatNumber(windowTreatRS
 					.getString("CURRENT_YEAR_OBS_ADJ")));
 			windowTreatList.add(formatNumber(windowTreatRS
