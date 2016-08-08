@@ -34,8 +34,7 @@ import com.pi.service.ReportServiceImpl;
 public class CostingController {
 	@Autowired
 	private CostingService costingService;
-	/*@Autowired
-	private ReportService rptService;*/
+	
 	@RequestMapping(value = "/getAllStores", method = RequestMethod.GET, headers = "Accept=application/json")
 	public List<Costing> getAllStroes() {
 		
@@ -43,13 +42,4 @@ public class CostingController {
 		return storeList;
 
 	}
-	
-	/*@RequestMapping(value = "/listOfRpt", method = RequestMethod.GET, headers = "Accept=application/json")
-	public Map<String, List<String>> getAllReport() {
-		System.out.println("inside rpt controller");
-		Map<String, List<String>> rptList = new ReportServiceImpl().getReports(9953);
-		return rptList;
-	}*/
-	
-	
 }

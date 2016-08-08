@@ -9,6 +9,9 @@
 						<div class="firstTdDiv">
 							<center class="firstHeading" data-toggle="collapse"
 								data-target="#collapse3">Inventory Run Process</center>
+								 <div class="custom-select-placeholder" style="background-color: #e0ecff;">
+					    		<span id="placeholder-pages" ng-bind="selected_option"  style="align:center;color:red;" ></span>
+								</div> 
 							<div class="row secondTdDiv" id="tb">
 								<div class="input-group thirdTdDiv">
 									<input class="form-control firstTdInput"
@@ -140,7 +143,7 @@
 
 				<button type="button" class="btn btn-primary btn-group"
 					ng-disabled="isvalidDate || digits.text1.$error.pattern"
-					ng-click="saveStores(csvStoreList)">Save</button>
+					ng-click="saveStores(csvSkuList)">Save</button>
 				<button type="button" class="btn btn-primary  btn-group"
 					ng-click="approve()">Approve</button>
 			</div>

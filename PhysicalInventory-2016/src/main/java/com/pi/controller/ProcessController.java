@@ -1,10 +1,6 @@
 package com.pi.controller;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.pi.model.Message;
 import com.pi.model.StoreProcess;
 import com.pi.service.ProcessService;
 import com.sherwin.polling.PollingClient;
@@ -39,26 +36,48 @@ public class ProcessController {
 	public List<StoreProcess> getAllSProcess() {
 		List<StoreProcess> storeList = processService.getAllStorePo();
 		return storeList;
-
 	}
-
 	@RequestMapping(value = "/approve", method = RequestMethod.POST)
-	public String approve(@RequestBody StoreProcess processData) {
-		List<String> stNoList = processData.getStoreNoList();
-		System.out
-				.println("controller coming to approve****" + stNoList.size());
-		String result = null;
-		try {
-			result = callToWebService(stNoList);
-			//result= "1234";
-			processService.storeTaskId(result);
-			ModifyXMLFile();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
+	 public ResponseEntity<Message>   approve(@RequestBody StoreProcess processData){
+	       
+			System.out.println(" selected data from text area inside controller >>> "+processData.getStoreNoList().size());
+			processService.updateStore(processData);
+			Message msg = new Message();
+			String message ="";
+			String result = null;
+			List<String> stNoList = processData.getStoreNoList();
+			try {
+				//callToWebService(processData.getStoreNoList());
+				//processService.storeTaskId(result);
+				result = callToWebService(stNoList);
+				//result= "1234";
+				processService.storeTaskId(result);
+				ModifyXMLFile(processData.getProcessDate());
+				message="Inventory Approved Sucesssfully !!";
+				msg.setMessage(message);
+				 return new ResponseEntity<Message> (msg, HttpStatus.CREATED);
+				//return  message;
+			} catch (Exception e) {
+				message="Error in Approved !!";
+				msg.setMessage(message);
+				return new ResponseEntity<Message> (msg, HttpStatus.FAILED_DEPENDENCY);
+			}
 	}
+	
+	
+
+	/*public String callToWebService(List<String> stNoList) throws Exception {
+		PollingClient pc = new PollingClient("dev", "PhysicalInventory");
+		String fname = "C:\\Users\\rxd876\\Downloads\\new_workspace\\PhysicalInventory-2016\\src\\main\\resources\\PollingFile.xml";
+		// String fname = "//resources//PollingFile.xml";
+		File f = new File(fname);
+		// List<String> storesList = new ArrayList<String>();
+		// storesList.add("9953");
+		pc.postToStores(stNoList, "LIST");
+		pc.write(f);
+		String result = pc.postMaintenance();
+		return result;
+	}*/
 
 	public String callToWebService(List<String> stNoList) throws Exception {
 		PollingClient pc = new PollingClient("dev", "PhysicalInventory");
@@ -72,24 +91,20 @@ public class ProcessController {
 		String result = pc.postMaintenance();
 		return result;
 	}
-
 	@RequestMapping(value = "/createStr", method = RequestMethod.POST)
-	public ResponseEntity<Void> UpdateStroes(
-			@RequestBody StoreProcess processData,
-			UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Void> UpdateStroes(@RequestBody StoreProcess processData,UriComponentsBuilder ucBuilder) {
 
-		System.out.println(" selected data inside controller >>> "
-				+ processData.getStoreNoList().size());
-		System.out.println(" unselected data inside controller >>>>>"
-				+ processData.getUncheckList().size());
+		System.out.println(" selected data inside controller >>> "+ processData.getStoreNoList().size());
+		System.out.println(" unselected data inside controller >>>>>"+ processData.getUncheckList().size());
+		System.out.println("processDate "+processData.getProcessDate());
 		processService.updateStore(processData);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/listOsProcess").buildAndExpand()
-				.toUri());
+		headers.setLocation(ucBuilder.path("/listOsProcess").buildAndExpand().toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 
-	public void ModifyXMLFile() {
+	public void ModifyXMLFile(String date) {
+		System.out.println("date in modifyxml file");
 		try {
 			String filepath = "C:\\Users\\rxd876\\Downloads\\new_workspace\\PhysicalInventory-2016\\src\\main\\resources\\PollingFile.xml";
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
@@ -105,10 +120,10 @@ public class ProcessController {
 			// I am not doing any thing with it just for showing you
 			// String currentStartdate = startdate.getNodeValue();
 
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			Date today = Calendar.getInstance().getTime();
+			//DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			//Date today = Calendar.getInstance().getTime();
 
-			startdate.setTextContent(df.format(today));
+			startdate.setTextContent(date);
 
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory

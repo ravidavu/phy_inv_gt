@@ -18,9 +18,7 @@ public class ReportController {
 	
 	@RequestMapping(value = "/listOfRpt", method = RequestMethod.GET, headers = "Accept=application/json")
 	public Map<String, List<String>> getAllReport() {
-		System.out.println("inside rpt controller "+rptService);
 		Map<String, List<String>> rptList = rptService.getReports(9953);
-		System.out.println("result is "+rptList.size());
 		return rptList;
 	}
 }

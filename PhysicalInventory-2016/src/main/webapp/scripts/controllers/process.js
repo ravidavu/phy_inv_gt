@@ -19,17 +19,13 @@ angular
 							});
 							$scope.dispalyData($scope.recordsPerPage);
 						});
-
-					}
-
+					};
 					$scope.fetchAllProcess();
 
 					$scope.idSelectedCosting = null;
 					$scope.setSelectedCosting = function(idSelectedCosting) {
 						$scope.idSelectedCosting = idSelectedCosting;
-						// console.log(idSelectedCosting);
-					}
-
+					};
 					$scope.dispalyData = function(size) {
 						if ($scope.stores.length > 0) {
 
@@ -41,9 +37,6 @@ angular
 									* $scope.recordsPerPage * 5);
 							$scope.endIndex = $scope.startIndex
 									+ $scope.recordsPerPage * 5;
-							console.log("hi:" + $scope.startIndex + ":"
-									+ $scope.endIndex);
-
 						} else {
 							$scope.searchResult = [];
 							$scope.pagedSearchResult = [];
@@ -57,8 +50,6 @@ angular
 								* $scope.recordsPerPage * 5);
 						$scope.endIndex = $scope.startIndex
 								+ $scope.recordsPerPage * 5;
-						console.log("hi:" + $scope.startIndex + ":"
-								+ $scope.endIndex);
 						if ($scope.searchItem != '') {
 							$scope.pagedSearchResult1 = $filter('filter')(
 									$scope.searchResult, $scope.searchItem);
@@ -85,8 +76,6 @@ angular
 								* $scope.recordsPerPage * 5);
 						$scope.endIndex = $scope.startIndex
 								+ $scope.recordsPerPage * 5;
-						console.log("hi:" + $scope.startIndex + ":"
-								+ $scope.endIndex);
 					};
 
 					$scope.datepickerOptions = {
@@ -118,9 +107,8 @@ angular
 								$scope.uncheckList.push(s.storeNo);
 							});
 						}
-
 					};
-
+					
 					$scope.removeAll = function(check) {
 						if (check) {
 							$scope.stores.forEach(function(s) {
@@ -143,27 +131,40 @@ angular
 					Array.prototype.remove = function(set) {
 						return this.filter(function(e, i, a) {
 							return set.indexOf(e) < 0
-						})
+						});
 					};
-
 					$scope.approve = function() {
-						var processDate = $scope.date;
+						
+						//alert("appove method >> ");
+						//var processDate = $scope.date;
+						var processDate = $filter('date')($scope.date,'yyyy-MM-dd');
+						//alert("processDate in approve "+processDate);
 						$scope.selectedData = [];
+						$scope.uncheckList = [];
 						$scope.stores.forEach(function(s) {
 
 							if (s.isChecked == true) {
 								$scope.selectedData.push(s.storeNo);
 							}
+
 						});
+						console.log($scope.selectedData);
 						$http({
 							url : 'approve',
 							method : 'POST',
 							data : {
-								storeNoList : $scope.selectedData
+								storeNoList : $scope.selectedData,
+								processDate : processDate
 							}
-						}).success(function() {
-							alert("approve successully updated..");
-						});
+						}).success(function (data, status) {
+							$scope.fetchAllProcess();
+						    alert(data.message);
+			            })
+			            .error(function (data, status) {
+							$scope.selected_option = data.message;	 
+			            	$scope.fetchAllProcess();
+			            });
+					
 					};
 
 					$scope.validateDate = function() {
@@ -171,29 +172,24 @@ angular
 							$scope.isvalidDate = false;
 						} else {
 							$scope.isvalidDate = true;
-
 						}
 					}
 					$scope.saveStores = function(csv) {
-
-						var processDate = $filter('date')($scope.date,
-								'yyyy-MM-dd');
-						console.log("Date:::::::::" + processDate);
-
+						var textAreaLists =[];
+						textAreaLists = $scope.csvSkuList;
+						var processDate = $filter('date')($scope.date,'yyyy-MM-dd');
+						alert("processDate "+processDate);
 						$scope.isvalidDate = false;
 						if ($scope.date) {
-
 							$scope.selectedData = [];
 							$scope.uncheckList = [];
 							$scope.stores.forEach(function(s) {
-
 								$scope.totalData.push(s.storeNo);
 								if (s.isChecked == true) {
 									$scope.selectedData.push(s.storeNo);
 								} else {
 									$scope.uncheckList.push(s.storeNo);
 								}
-
 							});
 
 							if (csv != null && csv.length > 0) {
@@ -201,9 +197,7 @@ angular
 								$scope.selectedData = [];
 								$scope.uncheckList = [];
 								$scope.selectedData = $scope.totalData;
-
-								$scope.selectedData = $scope.selectedData
-										.remove(stores);
+								$scope.selectedData = $scope.selectedData.remove(stores);
 								$scope.uncheckList = stores;
 								$scope.stores.forEach(function(s) {
 									if (stores.indexOf(s.storeNo) != -1) {
@@ -211,27 +205,23 @@ angular
 									}
 								});
 							}
-
 							$scope.csvStoreList = '';
 							$http({
 								url : 'createStr',
 								method : 'POST',
-
 								data : {
 									storeNoList : $scope.selectedData,
-									uncheckList : $scope.uncheckList
+									uncheckList : $scope.uncheckList,
+									processDate : processDate
+									//textAreaList :textAreaLists
 								}
 							}).success(function() {
 								$scope.fetchAllProcess();
 								alert("Inventory Updated Successffully!!");
-
 							});
 						} else {
-							console.log("IN ELSE:::::");
 							$scope.isvalidDate = true;
 							$scope.msg = "Please enter  date .";
 						}
-
 					};
-
 				});
