@@ -36,8 +36,10 @@ public class ReportDaoImpl implements ReportDao {
 		System.out.println("insdie report dao " + jdbcTemplate);
 		SqlRowSet floorRs = jdbcTemplate.queryForRowSet(floorSql);
 		List<String> floorList = new ArrayList<String>();
-
+		List<String> ty_sales_totals = new ArrayList<String>();
 		while (floorRs.next()) {
+			ty_sales_totals.add(floorRs.getString("TY_SALES"));
+			
 			floorList.add(formatNumber(floorRs.getString("TY_SALES")));
 			floorList.add(formatNumber(floorRs.getString("LY_SALES")));
 			floorList.add(formatNumber(floorRs.getString("TY_GM")));
@@ -97,6 +99,7 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet sparyRS = jdbcTemplate.queryForRowSet(sparySql);
 		List<String> sparyList = new ArrayList<String>();
 		while (sparyRS.next()) {
+			ty_sales_totals.add(sparyRS.getString("TY_SALES"));
 			sparyList.add(formatNumber(sparyRS.getString("TY_SALES")));
 			sparyList.add(formatNumber(sparyRS.getString("LY_SALES")));
 			sparyList.add(formatNumber(sparyRS.getString("TY_GM")));
@@ -154,6 +157,7 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet paintRS = jdbcTemplate.queryForRowSet(paintSql);
 		List<String> paintList = new ArrayList<String>();
 		while (paintRS.next()) {
+			ty_sales_totals.add(paintRS.getString("TY_SALES"));
 			paintList.add(formatNumber(paintRS.getString("TY_SALES")));
 			paintList.add(formatNumber(paintRS.getString("LY_SALES")));
 			paintList.add(formatNumber(paintRS.getString("TY_GM")));
@@ -211,6 +215,7 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet brushRollerRS = jdbcTemplate.queryForRowSet(brushRollerSql);
 		List<String> brushRollerList = new ArrayList<String>();
 		while (brushRollerRS.next()) {
+			ty_sales_totals.add(brushRollerRS.getString("TY_SALES"));
 			brushRollerList.add(formatNumber(brushRollerRS
 					.getString("TY_SALES")));
 			brushRollerList.add(formatNumber(brushRollerRS
@@ -281,6 +286,8 @@ public class ReportDaoImpl implements ReportDao {
 				.queryForRowSet(assocProdcutsSql);
 		List<String> assocProdcutsList = new ArrayList<String>();
 		while (assocProdcutsRS.next()) {
+			ty_sales_totals.add(assocProdcutsRS.getString("TY_SALES"));
+			
 			assocProdcutsList.add(formatNumber(assocProdcutsRS
 					.getString("TY_SALES")));
 			assocProdcutsList.add(formatNumber(assocProdcutsRS
@@ -353,6 +360,8 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet wallCoveringRS = jdbcTemplate.queryForRowSet(wallCoveringSql);
 		List<String> wallCoveringList = new ArrayList<String>();
 		while (wallCoveringRS.next()) {
+			ty_sales_totals.add(wallCoveringRS.getString("TY_SALES"));
+			
 			wallCoveringList.add(formatNumber(wallCoveringRS
 					.getString("TY_SALES")));
 			wallCoveringList.add(formatNumber(wallCoveringRS
@@ -425,6 +434,8 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet windowTreatRS = jdbcTemplate.queryForRowSet(windowTreatSql);
 		List<String> windowTreatList = new ArrayList<String>();
 		while (windowTreatRS.next()) {
+			ty_sales_totals.add(windowTreatRS.getString("TY_SALES"));
+			
 			windowTreatList.add(formatNumber(windowTreatRS
 					.getString("TY_SALES")));
 			windowTreatList.add(formatNumber(windowTreatRS
@@ -489,7 +500,8 @@ public class ReportDaoImpl implements ReportDao {
 			windowTreatList.add(formatNumber(windowTreatRS
 					.getString("TOTAL_PL_ADJ_CHANGE_TY_VS_LY")));
 		}
-
+		double total_ty = setArrayListElement(ty_sales_totals);
+		
 		String desStr = "TY SALES $ ( 11/09 - 10/10 ),LY SALES $ ( 11/08 - 10/09 ) ,TY GM % ( 11/09 - 10/10 ) ,  LY GM % ( 11/08 - 10/09 ) , NET BOOK INVENTORY ,TINT USE ADJUSTMENT ,( + )  CLOSING REPORTS, \"A\"   CHRGD TO STORE-NOT RECVD( INT ) ,\"B\"   RECVD-NOT CHRGD TO STORE( EXT ) ,"
 				+ "\"C\"   RECVD-NOT CHRGD TO STORE( INT ) ,   \"D\"   OPEN IBARS/ISTS/EXPENSED MDSE TRAN , \"E\"   OPEN CHARGE-BACKS(EXT) ,\"F\"   CHRGD TO STORE-NOT RECVD( EXT ) , \"R\"   OPEN DOSCREPANCY REPORTS( EXT ) ,\"Z\"   OPEN MOUTH SALES REPORTS ,"
 				+ " =   ADJUSTED BOOK INVENTORY ,GROSS PHYSICAL INVENTORY ( AS COUNTED ) , (+)   PHYSICAL INV ADJUSTMENTS ,=  ADJUSTED GROSS PHYSICAL INVENTORY , =  TY INVENTORY SHRINK/( PICKUP )%( 3710 A ,TY INVENTORY SHRINK/( PICKUP )% TO SLS ,CURRENT YEAR OBSOLESCENCE ,(+) CURRENT YEAR OBS ADJUSTMENTS ,"
@@ -518,6 +530,16 @@ public class ReportDaoImpl implements ReportDao {
 		return map;
 	}
 
+	 private Double setArrayListElement(List<String> ty_sales_totals) throws NumberFormatException
+	 {   
+	     Double amount=(double) 0;    
+	     for (int i = 0 ; i < ty_sales_totals.size() ; i++)
+	     {
+	        amount= amount+Double.valueOf((String) ty_sales_totals.get(i));
+	     }
+	     return amount;
+	 }
+	 
 	private String formatNumber(String string) {
 		String formateedString = " ";
 		if (null != string && string.length() > 0) {
