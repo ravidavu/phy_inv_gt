@@ -28,3 +28,5 @@ PhysicalInventory-2016/build/libs/PhysicalInventory.war
 .Trashes
 ehthumbs.db
 Thumbs.db
+.class
+*.class
