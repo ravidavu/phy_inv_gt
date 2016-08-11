@@ -58,10 +58,18 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet floorRs = jdbcTemplate.queryForRowSet(floorSql);
 		List<String> floorList = new ArrayList<String>();
 		List<String> ty_sales_totals = new ArrayList<String>();
+		boolean floorFlag = true;
 		while (floorRs.next()) {
+			floorFlag = false;
+			ty_sales_totals.add(floorRs.getString("TY_SALES"));
 
 			for (int i = 1; i < columns.size(); i++) {
 				floorList.add(formatNumber(floorRs.getString(columns.get(i))));
+			}
+		}
+		if (floorFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				floorList.add(" ");
 			}
 		}
 
@@ -70,20 +78,36 @@ public class ReportDaoImpl implements ReportDao {
 				+ "where b.SPRAY_EQUIPMENT=a.id and b.ID=1001";
 		SqlRowSet sparyRS = jdbcTemplate.queryForRowSet(sparySql);
 		List<String> sparyList = new ArrayList<String>();
+
+		boolean sparyFlag = true;
 		while (sparyRS.next()) {
+			sparyFlag = false;
+			ty_sales_totals.add(sparyRS.getString("TY_SALES"));
 			for (int i = 1; i < columns.size(); i++) {
 				sparyList.add(formatNumber(sparyRS.getString(columns.get(i))));
 			}
 		}
-
+		if (sparyFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				sparyList.add(" ");
+			}
+		}
 		String paintSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
 				+ "where b.PAINT=a.id and b.ID=1001";
 		SqlRowSet paintRS = jdbcTemplate.queryForRowSet(paintSql);
 		List<String> paintList = new ArrayList<String>();
+		boolean paintFlag = true;
 		while (paintRS.next()) {
+			paintFlag = false;
+			ty_sales_totals.add(paintRS.getString("TY_SALES"));
 
 			for (int i = 1; i < columns.size(); i++) {
 				paintList.add(formatNumber(paintRS.getString(columns.get(i))));
+			}
+		}
+		if (paintFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				paintList.add(" ");
 			}
 		}
 
@@ -91,11 +115,18 @@ public class ReportDaoImpl implements ReportDao {
 				+ "where b.brushes_rollers=a.id and b.ID=1001";
 		SqlRowSet brushRollerRS = jdbcTemplate.queryForRowSet(brushRollerSql);
 		List<String> brushRollerList = new ArrayList<String>();
+		boolean brushRollerFlag = true;
 		while (brushRollerRS.next()) {
-
+			ty_sales_totals.add(brushRollerRS.getString("TY_SALES"));
+			brushRollerFlag = false;
 			for (int i = 1; i < columns.size(); i++) {
 				brushRollerList.add(formatNumber(brushRollerRS
 						.getString(columns.get(i))));
+			}
+		}
+		if (brushRollerFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				brushRollerList.add(" ");
 			}
 		}
 		String assocProdcutsSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
@@ -103,39 +134,57 @@ public class ReportDaoImpl implements ReportDao {
 		SqlRowSet assocProdcutsRS = jdbcTemplate
 				.queryForRowSet(assocProdcutsSql);
 		List<String> assocProdcutsList = new ArrayList<String>();
+		boolean assocProdcutsFlag = true;
 		while (assocProdcutsRS.next()) {
+			assocProdcutsFlag = false;
+			ty_sales_totals.add(assocProdcutsRS.getString("TY_SALES"));
 
 			for (int i = 1; i < columns.size(); i++) {
 				assocProdcutsList.add(formatNumber(assocProdcutsRS
 						.getString(columns.get(i))));
 			}
 		}
-
+		if (assocProdcutsFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				assocProdcutsList.add(" ");
+			}
+		}
 		String wallCoveringSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
 				+ "where b.WALL_COVERING=a.id and b.ID=1001";
 		SqlRowSet wallCoveringRS = jdbcTemplate.queryForRowSet(wallCoveringSql);
 		List<String> wallCoveringList = new ArrayList<String>();
+		boolean wallCoveringFlag = true;
 		while (wallCoveringRS.next()) {
-
+			ty_sales_totals.add(wallCoveringRS.getString("TY_SALES"));
+			wallCoveringFlag = false;
 			for (int i = 1; i < columns.size(); i++) {
 				wallCoveringList.add(formatNumber(wallCoveringRS
 						.getString(columns.get(i))));
 			}
 		}
-
+		if (wallCoveringFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				wallCoveringList.add(" ");
+			}
+		}
 		String windowTreatSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
 				+ "where b.WINDOW_TRATMENT=a.id and b.ID=1001";
 		SqlRowSet windowTreatRS = jdbcTemplate.queryForRowSet(windowTreatSql);
 		List<String> windowTreatList = new ArrayList<String>();
+		boolean windowTreatFlag = true;
 		while (windowTreatRS.next()) {
-
+			ty_sales_totals.add(windowTreatRS.getString("TY_SALES"));
+			windowTreatFlag = false;
 			for (int i = 1; i < columns.size(); i++) {
 				windowTreatList.add(formatNumber(windowTreatRS
 						.getString(columns.get(i))));
 			}
-
 		}
-		double total_ty = setArrayListElement(ty_sales_totals);
+		if (windowTreatFlag) {
+			for (int i = 1; i < columns.size(); i++) {
+				windowTreatList.add(" ");
+			}
+		}
 
 		String desStr = "TY SALES $ ( 11/09 - 10/10 ),LY SALES $ ( 11/08 - 10/09 ) ,TY GM % ( 11/09 - 10/10 ) ,  LY GM % ( 11/08 - 10/09 ) , NET BOOK INVENTORY ,TINT USE ADJUSTMENT ,( + )  CLOSING REPORTS, \"A\"   CHRGD TO STORE-NOT RECVD( INT ) ,\"B\"   RECVD-NOT CHRGD TO STORE( EXT ) ,"
 				+ "\"C\"   RECVD-NOT CHRGD TO STORE( INT ) ,   \"D\"   OPEN IBARS/ISTS/EXPENSED MDSE TRAN , \"E\"   OPEN CHARGE-BACKS(EXT) ,\"F\"   CHRGD TO STORE-NOT RECVD( EXT ) , \"R\"   OPEN DOSCREPANCY REPORTS( EXT ) ,\"Z\"   OPEN MOUTH SALES REPORTS ,"
@@ -160,9 +209,8 @@ public class ReportDaoImpl implements ReportDao {
 			double result = reverseformatNumber(paintList.get(i))
 					+ reverseformatNumber(brushRollerList.get(i))
 					+ reverseformatNumber(assocProdcutsList.get(i))
-					+
-					// reverseformatNumber(floorList.get(i))+
-					reverseformatNumber(sparyList.get(i))
+					+ reverseformatNumber(floorList.get(i))
+					+ reverseformatNumber(sparyList.get(i))
 					+ reverseformatNumber(wallCoveringList.get(i))
 					+ reverseformatNumber(windowTreatList.get(i));
 			totalList.add(formatNumber(decimalFormat.format(result) + ""));
@@ -178,15 +226,6 @@ public class ReportDaoImpl implements ReportDao {
 			map.put("totalList", totalList);
 		}
 		return map;
-	}
-
-	private Double setArrayListElement(List<String> ty_sales_totals)
-			throws NumberFormatException {
-		Double amount = (double) 0;
-		for (int i = 0; i < ty_sales_totals.size(); i++) {
-			amount = amount + Double.valueOf((String) ty_sales_totals.get(i));
-		}
-		return amount;
 	}
 
 	private String formatNumber(String string) {
