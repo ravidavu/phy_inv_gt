@@ -27,22 +27,10 @@ th {
 td {
 	border-right: 1px solid #000;
 }
-.selectedBackground{
-background-color: #bfbfbf;
-}
+
 .tdAlign {
 	text-align: right;
 	padding-right: 10px;
-}
-.tdAlign1 {
-	padding-left: 10px;
-	border-right: 0px;
-	text-align: right;
-}
-.tddescAlign1 {
-	padding-left: 10px;
-	border-right: 0px;
-
 }
 
 .tddescAlign {
@@ -239,8 +227,8 @@ th {
 					<tr>
 						<td>
 							<table width="100%">
-								<tr style="background-color:grey">
-									<th style="width: 32%">DESCRIPTION</th>
+								<tr>
+									<th style="width: 33%">DESCRIPTION</th>
 									<th style="width: 8.37%">PAINT</th>
 									<th style="width: 8.37%">BRUSHES &amp; ROLLERS</th>
 									<th style="width: 8.37%">ASSOC PRODUCTS</th>
@@ -256,7 +244,7 @@ th {
 									<td width="100%">
 										<table ng-if="$index < 27" width="100%" border="0px">
 
-											<tr style="height: 22px !important;" ng-class="{selectedBackground : $index === 24 || $index == 23 || $index == 19 || $index === 20 }">
+											<tr style="height: 22px !important;">
 												<td class="tddescAlign" style="width: 33%"><br
 													ng-if="$index==2"> <br ng-if="$index==16"> <br
 													ng-if="$index==18"> <br ng-if="$index==19"> <br
@@ -317,10 +305,10 @@ th {
 						</td>
 					</tr>
 				</table>
-				<table border="1px" width="99.7%" style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;margin-right: 2px;padding-right:2px;">
+				<table border="1px" width="100%" style="margin-top: 2px">
 					<tr>
 						<td>
-							<table border="1px" width="99.7%" style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;margin-right: 2px;padding-right:2px;">
+							<table border="1px" width="100%" style="margin-top: 2px">
 								<tr>
 									<td>
 										<table width="100%">
@@ -329,54 +317,54 @@ th {
 												<td width="100%">
 													<table ng-if="$index >= 27" width="100%" border="0px">
 
-														<tr >
-															<td class="tddescAlign1" style="width: 33%"><br
+														<tr>
+															<td class="tddescAlign" style="width: 33%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">
 																{{reportlist.description[$index]}}</td>
-															<td class="tdAlign1" style="width: 8.37%"><br
+															<td class="tdAlign" style="width: 8.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">{{reportlist.paint[$index]}}</td>
-															<td class="tdAlign1" style="width: 8.37%"><br
+															<td class="tdAlign" style="width: 8.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">{{reportlist.brush[$index]}}
 															</td>
-															<td class="tdAlign1" style="width: 8.37%"><br
+															<td class="tdAlign" style="width: 8.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">{{reportlist.assocprod[$index]}}
 															</td>
 
-															<td class="tdAlign1" style="width: 8.37%"><br
+															<td class="tdAlign" style="width: 8.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">{{reportlist.floor[$index]}}
 															</td>
-															<td class="tdAlign1" style="width: 8.37%"><br
+															<td class="tdAlign" style="width: 8.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">{{reportlist.spray[$index]}}</td>
-															<td class="tdAlign1"><br ng-if="$index==2"> <br
+															<td class="tdAlign"><br ng-if="$index==2"> <br
 																ng-if="$index==16"> <br ng-if="$index==18"> <br
 																ng-if="$index==19"> <br ng-if="$index==21"> <br
 																ng-if="$index==23"> <br ng-if="$index==25"> <br
 																ng-if="$index==30">{{reportlist.wall[$index]}}</td>
-															<td class="tdAlign1" style="width: 8.37%"><br
+															<td class="tdAlign" style="width: 8.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
 																ng-if="$index==25"> <br ng-if="$index==30">{{reportlist.windowtreat[$index]}}
 															</td>
-															<td class="tdAlign1" style="width: 7.37%"><br
+															<td class="tdAlign" style="width: 7.37%"><br
 																ng-if="$index==2"> <br ng-if="$index==16"> <br
 																ng-if="$index==18"> <br ng-if="$index==19"> <br
 																ng-if="$index==21"> <br ng-if="$index==23"> <br
