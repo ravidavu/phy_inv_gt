@@ -20,28 +20,48 @@
 						<thead>
 							<tr class="theader">
 								<th>Sku's List</th>
+								<th>Action</th>
 								<th>Sku's List</th>
+								<th>Action</th>
 								<th>Sku's List</th>
+								<th>Action</th>
 								<th>Sku's List</th>
+								<th>Action</th>
 								<th>Sku's List</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody> 
 							<tr class="tdata" ng-repeat="sku in pagedSearchResult" ng-if="$index%5== 0" ng-click="setSelectedObsolescence(sku)" ng-class="{selected : sku === idSelectedObsolescence}">
-								<span>
+								<span>	
 									<td>{{pagedSearchResult[$index].skuNo}}</td>
+									<td class="center"><input type="checkbox"
+										ng-if="pagedSearchResult[$index].skuNo"
+										ng-model="pagedSearchResult[$index].isChecked" /></td>
 								</span>
 								<span>
 									<td>{{pagedSearchResult[$index+1].skuNo}}</td>
+									<td class="center"><input type="checkbox"
+										ng-if="pagedSearchResult[$index+1].skuNo"
+										ng-model="pagedSearchResult[$index+1].isChecked" /></td>
 								</span>
 								<span>
 									<td>{{pagedSearchResult[$index+2].skuNo}}</td>
+									<td class="center"><input type="checkbox"
+										ng-if="pagedSearchResult[$index+2].skuNo"
+										ng-model="pagedSearchResult[$index+2].isChecked" /></td>
 								</span> 
 								<span>
 									<td>{{pagedSearchResult[$index+3].skuNo}}</td>
+									<td class="center"><input type="checkbox"
+										ng-if="pagedSearchResult[$index+3].skuNo"
+										ng-model="pagedSearchResult[$index+3].isChecked" /></td>
 								</span>
 								<span>
 									<td>{{pagedSearchResult[$index+4].skuNo}}</td>
+									<td class="center"><input type="checkbox"
+										ng-if="pagedSearchResult[$index+4].skuNo"
+										ng-model="pagedSearchResult[$index+4].isChecked" /></td>
 								</span>
 							</tr>
 							<tr>
@@ -64,9 +84,12 @@
 												<option>75</option>
 											</select>
 										</span>
-							
-		  								
 		  							</span>
+								</td>
+								<td>
+										<button type="button" class="btn btn-primary btn-group"
+										ng-disabled="isvalidDate || digits.text1.$error.pattern"
+										ng-click="deleteObso()">Delete</button>
 								</td>
 							</tr>
 						 </tbody>

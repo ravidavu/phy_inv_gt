@@ -8,8 +8,8 @@ public class StoreProcess {
 	private boolean status;
 	private List<String> storeNoList = new ArrayList<String>();
 	private List<String> uncheckList = new ArrayList<String>();
+	private List<String> textAreaList = new ArrayList<String>();
 	private String processDate;
-	
 	public boolean isStatus() {
 		return status;
 	}
@@ -33,6 +33,13 @@ public class StoreProcess {
 	}
 	public String getStoreNo() {
 		return storeNo;
+	}
+	public void setTextAreaList(List<String> textAreaList) {
+		
+		this.textAreaList = textAreaList;
+	}
+	public List<String> getTextAreaList() {
+		return textAreaList;
 	}
 	public void setProcessDate(String processDate) {
 		this.processDate = processDate;

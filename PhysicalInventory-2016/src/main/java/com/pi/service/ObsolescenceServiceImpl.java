@@ -23,4 +23,9 @@ public class ObsolescenceServiceImpl implements ObsolescenceService {
 		return obsolDao.getAllObsolence();
 	}
 
+	@Override
+	public void deleteObsolence(Obsolescence obsolence) {
+		obsolDao.deleteObsolence(obsolence);
+	}
+
 }

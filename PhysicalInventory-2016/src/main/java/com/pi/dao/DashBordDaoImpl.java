@@ -32,8 +32,6 @@ public class DashBordDaoImpl implements DashBordDao {
 
 	@Override
 	public List<DashBord> getAllProcess() {
-		System.out.println(jdbcTemplate.getDataSource());
-		System.out.println(jdbcTemplate.toString());
 		sql = "SELECT * FROM INVENTORY_PROCESS";
 		return jdbcTemplate.query(sql,
 				new ResultSetExtractor<List<DashBord>>() {

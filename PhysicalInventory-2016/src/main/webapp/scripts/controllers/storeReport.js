@@ -9,21 +9,8 @@ angular
 					$scope.maxSize = 30;
 					$scope.pageNo = 1;
 
-					/*$scope.fetchAllReports = function() {
-						$http.get("listOfReport").then(function(response) {
-							$scope.stores = response.data;
-							$scope.stores.forEach(function(s) {
-								if (s.status) {
-									s.isChecked = true;
-								}
-							});
-							$scope.dispalyData($scope.recordsPerPage);
-						});
-					};
-					$scope.fetchAllReports();*/
-					
 					$scope.fetchAllProcess = function() {
-						$http.get("listOsProcess").then(function(response) {
+						$http.get("listOfReport").then(function(response) {
 							$scope.stores = response.data;
 							$scope.stores.forEach(function(s) {
 								if (s.status) {
@@ -35,6 +22,18 @@ angular
 					};
 					$scope.fetchAllProcess();
 					
+					$scope.listOfReport = function() {
+						$http.get("listOfReport").then(function(response) {
+							$scope.stores = response.data;
+							$scope.stores.forEach(function(s) {
+								if (s.status) {
+									s.isChecked = true;
+								}
+							});
+							$scope.dispalyData($scope.recordsPerPage);
+						});
+					};
+					$scope.listOfReport();
 
 					$scope.idSelectedCosting = null;
 					$scope.setSelectedCosting = function(idSelectedCosting) {
@@ -147,7 +146,11 @@ angular
 						});
 					};
 					$scope.approve = function() {
+						
+						//alert("appove method >> ");
+						//var processDate = $scope.date;
 						var processDate = $filter('date')($scope.date,'yyyy-MM-dd');
+						//alert("processDate in approve "+processDate);
 						$scope.selectedData = [];
 						$scope.uncheckList = [];
 						$scope.stores.forEach(function(s) {
@@ -184,11 +187,12 @@ angular
 						} else {
 							$scope.isvalidDate = true;
 						}
-					};
+					}
 					$scope.saveStores = function(csv) {
 						var textAreaLists =[];
 						textAreaLists = $scope.csvSkuList;
 						var processDate = $filter('date')($scope.date,'yyyy-MM-dd');
+						alert("processDate "+processDate);
 						$scope.isvalidDate = false;
 						if ($scope.date) {
 							$scope.selectedData = [];
@@ -216,48 +220,30 @@ angular
 								});
 							}
 							$scope.csvStoreList = '';
-							var flag = true;
-							if($scope.uncheckList.length >0){
-								console.log($scope.uncheckList);
-								for(var i=0;i<$scope.uncheckList.length;i++){
-									var sno = $scope.uncheckList[i];
-									console.log("sno "+sno);
-									if($scope.totalData.indexOf(sno)==-1){
-										flag = false;
-										$scope.msg = "invalid store number ."+sno;
-										alert("invalid store number "+sno);
-										break;
-									}
+							$http({
+								url : 'createStr',
+								method : 'POST',
+								data : {
+									storeNoList : $scope.selectedData,
+									uncheckList : $scope.uncheckList,
+									processDate : processDate
+									//textAreaList :textAreaLists
 								}
-							}
-							console.log("flag is "+flag);
-							alert("233333...");
-							if(flag){	
-								$http({
-									url : 'createStr',
-									method : 'POST',
-									data : {
-										storeNoList : $scope.selectedData,
-										uncheckList : $scope.uncheckList,
-										processDate : processDate
-										//textAreaList :textAreaLists
-									}
-								}).success(function (data, status) {
-									
-									$scope.success_option = data.message;	
-									$scope.fetchAllProcess();
-									 $scope.csvSkuList='';
-								    //alert(data.message);
-					            })
-					            .error(function (data, status) {
-									$scope.selected_option = data.message;	 
-					            	$scope.fetchAllProcess();
-					            });
-							}
-							
-							} else {
-								$scope.isvalidDate = true;
-								$scope.msg = "Please enter  date .";
-							}
+							}).success(function (data, status) {
+								
+								$scope.success_option = data.message;	
+								$scope.fetchAllProcess();
+								 $scope.csvSkuList='';
+							    //alert(data.message);
+				            })
+				            .error(function (data, status) {
+								$scope.selected_option = data.message;	 
+				            	$scope.fetchAllProcess();
+				            });
+						
+						} else {
+							$scope.isvalidDate = true;
+							$scope.msg = "Please enter  date .";
+						}
 					};
 				});

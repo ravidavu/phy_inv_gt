@@ -13,10 +13,8 @@ angular.module('inventoryApp').controller('DashboardCtrl',
 				pid : null,
 				processName : '',
 				status : ''
-
 			};
 			self.users = [];
-
 			self.fetchAllProcess = function() {
 				DashBordService.fetchAllProcess().then(function(d) {
 					console.log("calling fetch service >> ");
@@ -30,8 +28,6 @@ angular.module('inventoryApp').controller('DashboardCtrl',
 			 $scope.setSelected = function(idSelectedUser) {
 			       $scope.idSelectedUser = idSelectedUser;
 			       console.log(idSelectedUser);
-			    }
-			
-			
+			    };
 			 self.fetchAllProcess();
 		} ]);

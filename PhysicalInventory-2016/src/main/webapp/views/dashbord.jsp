@@ -41,7 +41,8 @@
 								</tr>
 								<tr>
 									<td>Report</td>
-									<td><b>InProcess</b></td>
+									<td><a ui-sref="storeReport">Report</a></td>
+									
 								</tr>
 
 							</tbody>

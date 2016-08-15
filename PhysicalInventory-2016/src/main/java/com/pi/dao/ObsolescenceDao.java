@@ -9,4 +9,6 @@ public interface ObsolescenceDao {
 
 	public List<Obsolescence> getAllObsolence();
 
+	public void deleteObsolence(Obsolescence obsolence);
+
 }

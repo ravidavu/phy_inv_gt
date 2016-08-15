@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.pi.dao.ReportDao;
 import com.pi.dao.ReportDaoImpl;
+import com.pi.model.StoreProcess;
 @Service("rptService")
 public class ReportServiceImpl implements ReportService{
 
@@ -18,6 +19,12 @@ public class ReportServiceImpl implements ReportService{
 	public Map<String, List<String>> getReports(int storeId) {
 		// TODO Auto-generated method stub
 		return reportDao.getReport(storeId);
+	}
+
+	@Override
+	public List<StoreProcess> getAllReport() {
+		// TODO Auto-generated method stub
+		return reportDao.getAllReport();
 	}
 	
 

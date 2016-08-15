@@ -10,5 +10,5 @@ public interface ProcessService {
 	public int storeTaskId(String taskId);
 
 	public List<StoreProcess> getAllStorePo();
-
+	
 }

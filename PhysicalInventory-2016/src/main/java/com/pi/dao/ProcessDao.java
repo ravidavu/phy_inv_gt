@@ -11,4 +11,6 @@ public interface ProcessDao {
 
 	public int storeTaskId(String taskId);
 
+	public List<StoreProcess> getAllReport();
+
 }

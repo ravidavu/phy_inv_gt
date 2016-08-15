@@ -17,11 +17,8 @@ public class DashBordController {
 	@Autowired
 	private DashBordService dashBordService;
 
-	// DashBordDao pDao = new DashBordDaoImpl();
-
 	@RequestMapping(value = "/tasks", method = RequestMethod.GET, headers = "Accept=application/json")
 	public List<DashBord> getAllProcess() {
-		System.out.println("coming to controller");
 		List<DashBord> tasks = dashBordService.getAllProcess();
 		return tasks;
 

@@ -41,8 +41,6 @@ public class CostingDaoImpl implements CostingDao {
 					Costing store = new Costing();
 					store.setId(rst.getInt("id"));
 					store.setStoreNo(rst.getString("storeNo"));
-					String status= rst.getString("status");
-					
 					sList.add(store);
 				}
 				return sList;

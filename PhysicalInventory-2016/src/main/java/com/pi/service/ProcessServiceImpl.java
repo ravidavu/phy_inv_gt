@@ -29,4 +29,9 @@ public class ProcessServiceImpl implements ProcessService {
 	public int storeTaskId(String taskId) {
 			return processDao.storeTaskId(taskId);
 		}
+
+	/*@Override
+	public List<StoreProcess> getAllReport() {
+		return processDao.getAllReport();
+	}*/
 }

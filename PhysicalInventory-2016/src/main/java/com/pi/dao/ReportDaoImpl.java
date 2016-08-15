@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +19,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import com.pi.model.StoreProcess;
 
 @Repository("reportDao")
 public class ReportDaoImpl implements ReportDao {
@@ -37,6 +42,28 @@ public class ReportDaoImpl implements ReportDao {
 	@Override
 	public Map<String, List<String>> getReport(int storeId) {
 		final List<String> columns = new ArrayList<String>();
+
+		// getting the values for the report header
+		String rptHeaderVal = "select division, division_name, area, area_name, district, district_name, "
+				+ "store_number,store_name from costcntr_ecomm_v where store_number='70001T'";
+
+		SqlRowSet rptHeaderRs = jdbcTemplate.queryForRowSet(rptHeaderVal);
+		List<String> headerList = new ArrayList<String>();
+		while (rptHeaderRs.next()) {
+			String div = rptHeaderRs.getString("division") + " "
+					+ rptHeaderRs.getString("division_name");
+			String area = rptHeaderRs.getString("area") + " "
+					+ rptHeaderRs.getString("area_name");
+			String dist = rptHeaderRs.getString("district")
+					+ rptHeaderRs.getString("district_name");
+			String store = rptHeaderRs.getString("store_number") + " "
+					+ rptHeaderRs.getString("store_name");
+			headerList.add(div);
+			headerList.add(area);
+			headerList.add(dist);
+			headerList.add(store);
+		}
+
 		jdbcTemplate.query("select * from phy_inv_sales_totals",
 				new ResultSetExtractor<Integer>() {
 
@@ -51,9 +78,7 @@ public class ReportDaoImpl implements ReportDao {
 						return columnCount;
 					}
 				});
-		System.out.println("columns " + columns.get(0));
-		String floorSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.floor_covering=a.id and b.store_id=1001";
+		String floorSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='FLOOR COVERING' and a.STORE_ID='1059'";
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 		SqlRowSet floorRs = jdbcTemplate.queryForRowSet(floorSql);
 		List<String> floorList = new ArrayList<String>();
@@ -63,19 +88,17 @@ public class ReportDaoImpl implements ReportDao {
 			floorFlag = false;
 			ty_sales_totals.add(floorRs.getString("TY_SALES"));
 
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				floorList.add(formatNumber(floorRs.getString(columns.get(i))));
 			}
 		}
 		if (floorFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				floorList.add(" ");
 			}
 		}
 
-		System.out.println("===>floorList..." + floorList.size());
-		String sparySql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.SPRAY_EQUIPMENT=a.id and b.ID=1001";
+		String sparySql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='SPRAY EQUIPMENT' and a.STORE_ID='1059'";
 		SqlRowSet sparyRS = jdbcTemplate.queryForRowSet(sparySql);
 		List<String> sparyList = new ArrayList<String>();
 
@@ -83,17 +106,16 @@ public class ReportDaoImpl implements ReportDao {
 		while (sparyRS.next()) {
 			sparyFlag = false;
 			ty_sales_totals.add(sparyRS.getString("TY_SALES"));
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				sparyList.add(formatNumber(sparyRS.getString(columns.get(i))));
 			}
 		}
 		if (sparyFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				sparyList.add(" ");
 			}
 		}
-		String paintSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.PAINT=a.id and b.ID=1001";
+		String paintSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='PAINT' and a.STORE_ID='1059'";
 		SqlRowSet paintRS = jdbcTemplate.queryForRowSet(paintSql);
 		List<String> paintList = new ArrayList<String>();
 		boolean paintFlag = true;
@@ -101,36 +123,34 @@ public class ReportDaoImpl implements ReportDao {
 			paintFlag = false;
 			ty_sales_totals.add(paintRS.getString("TY_SALES"));
 
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				paintList.add(formatNumber(paintRS.getString(columns.get(i))));
 			}
 		}
 		if (paintFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				paintList.add(" ");
 			}
 		}
 
-		String brushRollerSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.brushes_rollers=a.id and b.ID=1001";
+		String brushRollerSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='BRUSHES'||' '||'&'||' '||'ROLLERS' and a.STORE_ID='1059'";
 		SqlRowSet brushRollerRS = jdbcTemplate.queryForRowSet(brushRollerSql);
 		List<String> brushRollerList = new ArrayList<String>();
 		boolean brushRollerFlag = true;
 		while (brushRollerRS.next()) {
 			ty_sales_totals.add(brushRollerRS.getString("TY_SALES"));
 			brushRollerFlag = false;
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				brushRollerList.add(formatNumber(brushRollerRS
 						.getString(columns.get(i))));
 			}
 		}
 		if (brushRollerFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				brushRollerList.add(" ");
 			}
 		}
-		String assocProdcutsSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.ASSOC_PRODUCTS=a.id and b.ID=1001";
+		String assocProdcutsSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='ASSOC PRODUCTS' and a.STORE_ID='1059'";
 		SqlRowSet assocProdcutsRS = jdbcTemplate
 				.queryForRowSet(assocProdcutsSql);
 		List<String> assocProdcutsList = new ArrayList<String>();
@@ -139,52 +159,51 @@ public class ReportDaoImpl implements ReportDao {
 			assocProdcutsFlag = false;
 			ty_sales_totals.add(assocProdcutsRS.getString("TY_SALES"));
 
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				assocProdcutsList.add(formatNumber(assocProdcutsRS
 						.getString(columns.get(i))));
 			}
 		}
 		if (assocProdcutsFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				assocProdcutsList.add(" ");
 			}
 		}
-		String wallCoveringSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.WALL_COVERING=a.id and b.ID=1001";
+		String wallCoveringSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='WALL COVERING' and a.STORE_ID='1059'";
 		SqlRowSet wallCoveringRS = jdbcTemplate.queryForRowSet(wallCoveringSql);
 		List<String> wallCoveringList = new ArrayList<String>();
 		boolean wallCoveringFlag = true;
 		while (wallCoveringRS.next()) {
 			ty_sales_totals.add(wallCoveringRS.getString("TY_SALES"));
 			wallCoveringFlag = false;
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				wallCoveringList.add(formatNumber(wallCoveringRS
 						.getString(columns.get(i))));
 			}
 		}
 		if (wallCoveringFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				wallCoveringList.add(" ");
 			}
 		}
-		String windowTreatSql = "select a.* from phy_inv_sales_totals a,phy_inv_product_desc b "
-				+ "where b.WINDOW_TRATMENT=a.id and b.ID=1001";
+		String windowTreatSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='WINDOW TREATMENT' and a.STORE_ID='1059'";
 		SqlRowSet windowTreatRS = jdbcTemplate.queryForRowSet(windowTreatSql);
 		List<String> windowTreatList = new ArrayList<String>();
 		boolean windowTreatFlag = true;
 		while (windowTreatRS.next()) {
 			ty_sales_totals.add(windowTreatRS.getString("TY_SALES"));
 			windowTreatFlag = false;
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				windowTreatList.add(formatNumber(windowTreatRS
 						.getString(columns.get(i))));
 			}
 		}
 		if (windowTreatFlag) {
-			for (int i = 1; i < columns.size(); i++) {
+			for (int i = 1; i < columns.size() - 1; i++) {
 				windowTreatList.add(" ");
 			}
 		}
+		double total_ty = setArrayListElement(ty_sales_totals);
 
 		String desStr = "TY SALES $ ( 11/09 - 10/10 ),LY SALES $ ( 11/08 - 10/09 ) ,TY GM % ( 11/09 - 10/10 ) ,  LY GM % ( 11/08 - 10/09 ) , NET BOOK INVENTORY ,TINT USE ADJUSTMENT ,( + )  CLOSING REPORTS, \"A\"   CHRGD TO STORE-NOT RECVD( INT ) ,\"B\"   RECVD-NOT CHRGD TO STORE( EXT ) ,"
 				+ "\"C\"   RECVD-NOT CHRGD TO STORE( INT ) ,   \"D\"   OPEN IBARS/ISTS/EXPENSED MDSE TRAN , \"E\"   OPEN CHARGE-BACKS(EXT) ,\"F\"   CHRGD TO STORE-NOT RECVD( EXT ) , \"R\"   OPEN DOSCREPANCY REPORTS( EXT ) ,\"Z\"   OPEN MOUTH SALES REPORTS ,"
@@ -224,8 +243,22 @@ public class ReportDaoImpl implements ReportDao {
 			map.put("wall", wallCoveringList);
 			map.put("windowtreat", windowTreatList);
 			map.put("totalList", totalList);
+			map.put("headerList", headerList);
 		}
 		return map;
+	}
+
+	private Double setArrayListElement(List<String> ty_sales_totals)
+			throws NumberFormatException {
+		Double amount = (double) 0;
+		if (!CollectionUtils.isEmpty(ty_sales_totals)) {
+			for (int i = 0; i < ty_sales_totals.size(); i++) {
+				if (! StringUtils.isEmpty(ty_sales_totals.get(i))) {
+					amount = amount + Double.valueOf(ty_sales_totals.get(i));
+				}
+			}
+		}
+		return amount;
 	}
 
 	private String formatNumber(String string) {
@@ -252,7 +285,7 @@ public class ReportDaoImpl implements ReportDao {
 				string = string.replaceAll(",", "");
 			}
 			if (string.indexOf("-") > 0) {
-				string = "-" + string.substring(0, string.lastIndexOf("-"));
+				string = "-" + string.substring(0, string.lastIndexOf("-") - 1);
 			}
 			try {
 				result = Float.parseFloat(string);
@@ -261,5 +294,31 @@ public class ReportDaoImpl implements ReportDao {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<StoreProcess> getAllReport() {
+		String sql = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO where participating_store='Y'";
+		return jdbcTemplate.query(sql,
+				new ResultSetExtractor<List<StoreProcess>>() {
+					@Override
+					public List<StoreProcess> extractData(ResultSet rst)
+							throws SQLException, DataAccessException {
+						List<StoreProcess> sList = new ArrayList<StoreProcess>();
+						while (rst.next()) {
+							StoreProcess store = new StoreProcess();
+							store.setStoreNo(rst.getString("STORE_NUMBER"));
+							String status = rst
+									.getString("PARTICIPATING_STORE");
+							if (status.equals("Y")) {
+								store.setStatus(true);
+							} else {
+								store.setStatus(false);
+							}
+							sList.add(store);
+						}
+						return sList;
+					}
+				});
 	}
 }

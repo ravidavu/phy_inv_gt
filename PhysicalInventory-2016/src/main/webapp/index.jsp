@@ -145,6 +145,7 @@
         <script src="scripts/services/storeService.js"></script>
         <script src="scripts/services/dashbordService.js"></script>
         <script src="scripts/controllers/report.js"></script>
+        <script src="scripts/controllers/reportController.js"></script>
     <!-- endbuild -->
 </body>
 </html>

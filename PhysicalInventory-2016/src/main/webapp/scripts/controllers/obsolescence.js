@@ -10,10 +10,7 @@ angular.module('inventoryApp')
   $scope.fetchAllProcess = function() {
     $http.get("getAllObs").then(function(response){
       $scope.skus = response.data;
-     //   $scope.gridOptions.data =  $scope.skus; 
-
        $scope.dispalyData($scope.recordsPerPage);
-
     });
 
   };
@@ -79,12 +76,6 @@ angular.module('inventoryApp')
 	    $scope.startIndex = (($scope.pageNo - 1) * $scope.recordsPerPage * 5);
 		$scope.endIndex  = $scope.startIndex + $scope.recordsPerPage * 5;
 		console.log("hi:"+$scope.startIndex+":"+$scope.endIndex );
-  /*$scope.searchPageChange = function(pagenum) {
-	  console.log("xxxxxxxxxxx::"+pagenum);
-    var begin = ((pagenum - 1) * $scope.recordsPerPage), end = begin
-        + $scope.recordsPerPage;
-    $scope.pagedSearchResult = $scope.searchResult.slice(begin,
-        end);*/
   };
 
     $scope.datepickerOptions = {
@@ -182,6 +173,31 @@ angular.module('inventoryApp')
        //ss=false;
      }
       
+     };
+     
+     $scope.deleteObso = function() {
+    	 $scope.selectedData = [];
+    	 $scope.skus.forEach(function(s) {
+			if (s.isChecked == true) {
+				$scope.selectedData.push(s.skuNo);
+			}
+		});
+    	 $http({
+				url : 'deleteObso',
+				method : 'POST',
+				data : {
+					skuNoList : $scope.selectedData
+				}
+			}).success(function (data, status) {
+				$scope.fetchAllProcess();
+				$scope.success_option = data.message;	
+			    alert(data.message);
+         })
+         .error(function (data, status) {
+			$scope.selected_option = data.message;	 
+         	$scope.fetchAllProcess();
+         });
+		console.log($scope.selectedData);
      };
 
   });
