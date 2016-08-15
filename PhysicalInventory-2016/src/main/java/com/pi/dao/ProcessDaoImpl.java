@@ -129,7 +129,7 @@ public class ProcessDaoImpl implements ProcessDao {
 		int task_id = getTaskId();
 		String taskPOQuery = "update PHY_INV_TASKS_PO set STATUS=? WHERE TASKS = ?";
 		jdbcTemplate.update(taskPOQuery, "APPROVED", "Stores Taking Data");
-		sql = "INSERT INTO PHY_INV_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES('1',?,?,?)";
+		sql = "INSERT INTO PHY_INV_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?)";
 		return jdbcTemplate.update(sql, requestId, new Date(), task_id);
 	}
 
