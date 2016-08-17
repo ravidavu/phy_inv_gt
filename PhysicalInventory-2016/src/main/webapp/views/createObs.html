@@ -1,0 +1,33 @@
+<form name="form">
+	<div>
+		<h1>Create Obsolescence</h1>
+		<hr>
+	<div class="control-group" ng-class="error('oId')">
+		<label class="control-label" for="oId">Store Number</label>
+		<div class="controls">
+			<input id="oId" name="oId" type="text"
+				ng-model="oId" placeholder="Please Enter Store Number" required /> <span
+				class="help-block"
+				ng-show="form.oId.$invalid && form.oId.$dirty">
+				Store Number is required </span>
+		</div>
+	</div>
+
+	<div class="control-group" ng-class="error('skuNo')">
+		<label class="control-label" for="skuNo">Sku Number</label>
+		<div class="controls">
+			<input id="skuNo" name="skuNo" type="text"
+				ng-model="skuNo" placeholder="Lastname" required /> <span
+				class="help-block"
+				ng-show="form.skuNo.$invalid && form.skuNo.$dirty">
+				Sku Number is required </span>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="controls">
+			<button ng-disabled="form.$invalid" class="btn btn-primary  btn-group" ng-click="saveObsData()">Submit</button>
+		</div>
+	</div>
+	</div>
+</form>

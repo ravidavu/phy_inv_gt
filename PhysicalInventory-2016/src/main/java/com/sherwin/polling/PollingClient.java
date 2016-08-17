@@ -106,8 +106,8 @@ public class PollingClient {
 			requestId = RestAdapter.writeFileToPolling(getEnv(), getApplicationId(), getPrerequisite(),
 					getDestMetaData(), pfmd);
 		} catch (IOException | InvalidInputException | ServerErrorException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw e;
 		}
 		return requestId;
 	}

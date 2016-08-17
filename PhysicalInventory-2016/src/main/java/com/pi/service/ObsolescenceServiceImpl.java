@@ -14,8 +14,8 @@ public class ObsolescenceServiceImpl implements ObsolescenceService {
 	private ObsolescenceDao obsolDao;
 
 	@Override
-	public void createObsolence(Obsolescence obs) {
-
+	public Boolean createObsolence(Obsolescence obs) {
+		return obsolDao.createObsolence(obs);
 	}
 
 	@Override

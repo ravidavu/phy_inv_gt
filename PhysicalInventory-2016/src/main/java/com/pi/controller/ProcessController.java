@@ -12,7 +12,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +26,7 @@ import com.pi.model.Message;
 import com.pi.model.StoreProcess;
 import com.pi.service.ProcessService;
 import com.sherwin.polling.PollingClient;
+import com.sherwin.polling.api.InvalidInputException;
 
 @RestController
 public class ProcessController {
@@ -55,7 +55,7 @@ public class ProcessController {
 		System.out
 				.println(" selected data from text area inside controller >>> "
 						+ processData.getStoreNoList().size());
-		processService.updateStore(processData);
+		//processService.updateStore(processData);
 
 		Message msg = new Message();
 		String message = "";
@@ -63,14 +63,19 @@ public class ProcessController {
 		List<String> stNoList = processData.getStoreNoList();
 
 		try {
-			processService.updateStore(processData);
-			processService.storeTaskId(result);
+			//processService.updateStore(processData);
+			//processService.storeTaskId(result);
 			result = callToWebService(stNoList);
 			processService.storeTaskId(result);
 			ModifyXMLFile(processData.getProcessDate());
 			message = "Inventory Approved Sucesssfully !!";
 			msg.setMessage(message);
 			return new ResponseEntity<Message>(msg, HttpStatus.CREATED);
+		}catch(InvalidInputException ie){
+			message = "Error in Approved !!";
+			msg.setMessage(message + "Invalid Input parameters");
+			return new ResponseEntity<Message>(msg,
+					HttpStatus.FAILED_DEPENDENCY);
 		} catch (Exception e) {
 			message = "Error in Approved !!";
 			msg.setMessage(message + e.getMessage());

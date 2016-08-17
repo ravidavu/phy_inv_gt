@@ -36,4 +36,25 @@ public class ObsolescenceController {
 		msg.setMessage(message);
 		return new ResponseEntity<Message> (msg, HttpStatus.OK);
 	}
+	@RequestMapping(value = "/createObso", method = RequestMethod.POST)
+	public ResponseEntity<Message> createObs(@RequestBody Obsolescence obsolence) {
+		System.out.println("Store No  of records " + obsolence.getoId());
+		System.out.println("Sku no records " + obsolence.getSkuNo());
+		Message msg = new Message();
+		String message = "";
+
+		try {
+			obsolService.createObsolence(obsolence);
+			message = "Obsolence Created Successfully !!";
+			msg.setMessage(message);
+			return new ResponseEntity<Message>(msg, HttpStatus.OK);
+
+		} catch (Exception e) {
+			message = "Error in  Obsolence Creation !!";
+			msg.setMessage(message);
+			return new ResponseEntity<Message>(msg,
+					HttpStatus.FAILED_DEPENDENCY);
+		}
+
+	}
 }

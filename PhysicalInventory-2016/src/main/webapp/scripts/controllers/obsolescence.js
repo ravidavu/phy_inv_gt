@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('inventoryApp')
-  .controller('ObsolescenceCtrl', function ($scope, $timeout, $http,$filter) {
+  .controller('ObsolescenceCtrl', function ($scope, $timeout, $http,$filter,ngDialog,$window) {
     
   $scope.recordsPerPage = 10;
   $scope.maxSize = 30;
@@ -199,5 +199,49 @@ angular.module('inventoryApp')
          });
 		console.log($scope.selectedData);
      };
+     
+   //creating add pop up
+     $scope.openCreateObsPop = function() {
+    	 ngDialog.open({
+             template: 'views/createObs.html',
+             controller: 'ObsolescenceCtrl',
+             className: 'ngdialog-theme-default'
+         });
+    	 
+     }
+     
+     $scope.saveObsData = function() {
+    	     	 
+    	 $http({
+				url : 'createObso',
+				method : 'POST',
+				data : {
+					oId : $scope.oId,
+					skuNo : $scope.skuNo
+				}
+			}).success(function (data, status) {
+				  $scope.closeSecond();
+				  $window.location.reload();
+				
+	      })
+	      .error(function (data, status) {
+				alert(data.message);
+	      });
+    	 
+     }
+   
+     $scope.closeSecond = function () {
+         ngDialog.close();
+     };
+     //file uploading begin
+     $scope.openUploadObsPop = function() {
+    	 ngDialog.open({
+             template: 'views/uploadFile.html',
+             controller: 'ObsolescenceCtrl',
+             className: 'ngdialog-theme-default'
+         });
+    	 
+     }
+     //end
 
   });

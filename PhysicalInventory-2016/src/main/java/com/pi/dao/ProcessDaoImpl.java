@@ -23,7 +23,17 @@ import com.pi.model.StoreProcess;
 @Repository("processDao")
 public class ProcessDaoImpl implements ProcessDao {
 
-	private String sql = null;
+	private final static String SQL_UPDATE_STORES_PO_Y = "UPDATE PHY_INV_STORES_PO SET PARTICIPATING_STORE='Y',UPDATED_DATE=?,INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
+	private final static String SQL_UPDATE_STORES_PO_N = "UPDATE PHY_INV_STORES_PO SET PARTICIPATING_STORE='N',UPDATED_DATE=?, INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
+	private final static String SQL_TASKS_PO = "UPDATE PHY_INV_TASKS_PO SET STATUS=? WHERE TASKS = ?";
+
+	private final static String SQL_TASKS_LOG = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?)";
+	private final static String SQL_STORE_REQUEST_ID = "INSERT INTO PHY_INV_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?)";
+
+	private final static String SQL_ALL_STORES_PO = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO";
+	private final static String SQL_GET_ALL_SELECTED_STORES = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO where participating_store='Y'";
+	private final static String SQL_GET_TASK_ID_WITH_STR_TAKING_DATA = "SELECT TASK_ID FROM PHY_INV_TASKS_PO WHERE TASKS = 'Stores Taking Data'";
+
 	ResultSet rst = null;
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -49,54 +59,53 @@ public class ProcessDaoImpl implements ProcessDao {
 		final Timestamp timeStamp = new java.sql.Timestamp(new Date().getTime());
 
 		if (null != stNoList && stNoList.size() > 0) {
-			sql = "UPDATE PHY_INV_STORES_PO SET PARTICIPATING_STORE='Y',UPDATED_DATE=?, INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
-			jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			jdbcTemplate.batchUpdate(SQL_UPDATE_STORES_PO_Y,
+					new BatchPreparedStatementSetter() {
 
-				public void setValues(PreparedStatement ps, int i)
-						throws SQLException {
-					String storeNo = stNoList.get(i);
-					ps.setTimestamp(1, timeStamp);
-					ps.setTimestamp(2, invRunDate);
-					ps.setString(3, storeNo);
-				}
+						public void setValues(PreparedStatement ps, int i)
+								throws SQLException {
+							String storeNo = stNoList.get(i);
+							ps.setTimestamp(1, timeStamp);
+							ps.setTimestamp(2, invRunDate);
+							ps.setString(3, storeNo);
+						}
 
-				public int getBatchSize() {
-					return stNoList.size();
-				}
-			});
+						public int getBatchSize() {
+							return stNoList.size();
+						}
+					});
 		}
 
 		if (null != unselctedList && unselctedList.size() > 0) {
 			System.out.println("inside unselected method");
-			sql = "UPDATE PHY_INV_STORES_PO SET PARTICIPATING_STORE='N',UPDATED_DATE=?, INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
-			jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			jdbcTemplate.batchUpdate(SQL_UPDATE_STORES_PO_N,
+					new BatchPreparedStatementSetter() {
 
-				public void setValues(PreparedStatement ps, int i)
-						throws SQLException {
+						public void setValues(PreparedStatement ps, int i)
+								throws SQLException {
+							String storeNo = unselctedList.get(i);
+							ps.setTimestamp(1, timeStamp);
+							ps.setString(2, null);
+							ps.setString(3, storeNo);
+						}
 
-					String storeNo = unselctedList.get(i);
-					ps.setTimestamp(1, timeStamp);
-					ps.setString(2, null);
-					ps.setString(3, storeNo);
-
-				}
-
-				public int getBatchSize() {
-					return unselctedList.size();
-				}
-			});
+						public int getBatchSize() {
+							return unselctedList.size();
+						}
+					});
 		}
 		// update to the log table
 		int task_id = getTaskId();
-		String sql = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?)";
-		jdbcTemplate.update(sql, timeStamp, task_id);
+		jdbcTemplate.update(SQL_TASKS_LOG, timeStamp, task_id);
+		// update the tasks_po_table
+		jdbcTemplate.update(SQL_TASKS_PO, "SAVED", "Stores Taking Data");
 		System.out.println("updated in PHY_INV_TASKS_LOG table ");
 	}
 
 	@Override
 	public List<StoreProcess> getAllStorePo() {
-		sql = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO";
-		return jdbcTemplate.query(sql,
+
+		return jdbcTemplate.query(SQL_ALL_STORES_PO,
 				new ResultSetExtractor<List<StoreProcess>>() {
 
 					@Override
@@ -119,23 +128,21 @@ public class ProcessDaoImpl implements ProcessDao {
 						}
 						return sList;
 					}
-
 				});
-
 	}
 
 	@Override
 	public int storeTaskId(String requestId) {
 		int task_id = getTaskId();
-		String taskPOQuery = "update PHY_INV_TASKS_PO set STATUS=? WHERE TASKS = ?";
-		jdbcTemplate.update(taskPOQuery, "APPROVED", "Stores Taking Data");
-		sql = "INSERT INTO PHY_INV_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?)";
-		return jdbcTemplate.update(sql, requestId, new Date(), task_id);
+		jdbcTemplate.update(SQL_TASKS_PO, "APPROVED", "Stores Taking Data");
+		return jdbcTemplate.update(SQL_STORE_REQUEST_ID, requestId, new Date(),
+				task_id);
 	}
 
-	public int getTaskId() {
-		String query = "SELECT TASK_ID FROM PHY_INV_TASKS_PO WHERE TASKS = 'Stores Taking Data'";
-		SqlRowSet rs = jdbcTemplate.queryForRowSet(query);
+	private int getTaskId() {
+
+		SqlRowSet rs = jdbcTemplate
+				.queryForRowSet(SQL_GET_TASK_ID_WITH_STR_TAKING_DATA);
 		int task_id = 0;
 		while (rs.next()) {
 			task_id = rs.getInt("task_id");
@@ -145,8 +152,7 @@ public class ProcessDaoImpl implements ProcessDao {
 
 	@Override
 	public List<StoreProcess> getAllReport() {
-		sql = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO where participating_store='Y'";
-		return jdbcTemplate.query(sql,
+		return jdbcTemplate.query(SQL_GET_ALL_SELECTED_STORES,
 				new ResultSetExtractor<List<StoreProcess>>() {
 					@Override
 					public List<StoreProcess> extractData(ResultSet rst)
@@ -168,5 +174,4 @@ public class ProcessDaoImpl implements ProcessDao {
 					}
 				});
 	}
-
 }

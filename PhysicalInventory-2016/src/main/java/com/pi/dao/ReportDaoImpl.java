@@ -7,7 +7,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,15 +18,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import com.pi.model.StoreProcess;
 
 @Repository("reportDao")
 public class ReportDaoImpl implements ReportDao {
+	private final static String SQL_PARTICIPATING_STORES = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO where participating_store='Y'";
+	private final static String SQL_FLOOR_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='FLOOR COVERING' and a.STORE_ID='1059'";
+	private final static String SQL_SPRAY_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='SPRAY EQUIPMENT' and a.STORE_ID='1059'";
+	private final static String SQL_BRUSHES_ROLLERS_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='BRUSHES'||' '||'&'||' '||'ROLLERS' and a.STORE_ID='1059'";
+	private final static String SQL_PAINT_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='PAINT' and a.STORE_ID='1059'";
+	private final static String SQL_ASSOC_PRODUCTS_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='ASSOC PRODUCTS' and a.STORE_ID='1059'";
+	private final static String SQL_WALL_COVERING_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='WALL COVERING' and a.STORE_ID='1059'";
+	private final static String SQL_WINDOW_TREAT_DATA = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='WINDOW TREATMENT' and a.STORE_ID='1059'";
+	// getting the values for the report header
+	private final static String SQL_HEADER_DATA = "select division, division_name, area, area_name, district, district_name, "
+			+ "store_number,store_name from costcntr_ecomm_v where store_number='70001T'";
 
-	ResultSet rst = null;
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -43,11 +50,7 @@ public class ReportDaoImpl implements ReportDao {
 	public Map<String, List<String>> getReport(int storeId) {
 		final List<String> columns = new ArrayList<String>();
 
-		// getting the values for the report header
-		String rptHeaderVal = "select division, division_name, area, area_name, district, district_name, "
-				+ "store_number,store_name from costcntr_ecomm_v where store_number='70001T'";
-
-		SqlRowSet rptHeaderRs = jdbcTemplate.queryForRowSet(rptHeaderVal);
+		SqlRowSet rptHeaderRs = jdbcTemplate.queryForRowSet(SQL_HEADER_DATA);
 		List<String> headerList = new ArrayList<String>();
 		while (rptHeaderRs.next()) {
 			String div = rptHeaderRs.getString("division") + " "
@@ -78,9 +81,8 @@ public class ReportDaoImpl implements ReportDao {
 						return columnCount;
 					}
 				});
-		String floorSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='FLOOR COVERING' and a.STORE_ID='1059'";
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		SqlRowSet floorRs = jdbcTemplate.queryForRowSet(floorSql);
+		SqlRowSet floorRs = jdbcTemplate.queryForRowSet(SQL_FLOOR_DATA);
 		List<String> floorList = new ArrayList<String>();
 		List<String> ty_sales_totals = new ArrayList<String>();
 		boolean floorFlag = true;
@@ -98,8 +100,7 @@ public class ReportDaoImpl implements ReportDao {
 			}
 		}
 
-		String sparySql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='SPRAY EQUIPMENT' and a.STORE_ID='1059'";
-		SqlRowSet sparyRS = jdbcTemplate.queryForRowSet(sparySql);
+		SqlRowSet sparyRS = jdbcTemplate.queryForRowSet(SQL_SPRAY_DATA);
 		List<String> sparyList = new ArrayList<String>();
 
 		boolean sparyFlag = true;
@@ -115,8 +116,7 @@ public class ReportDaoImpl implements ReportDao {
 				sparyList.add(" ");
 			}
 		}
-		String paintSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='PAINT' and a.STORE_ID='1059'";
-		SqlRowSet paintRS = jdbcTemplate.queryForRowSet(paintSql);
+		SqlRowSet paintRS = jdbcTemplate.queryForRowSet(SQL_PAINT_DATA);
 		List<String> paintList = new ArrayList<String>();
 		boolean paintFlag = true;
 		while (paintRS.next()) {
@@ -133,8 +133,8 @@ public class ReportDaoImpl implements ReportDao {
 			}
 		}
 
-		String brushRollerSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='BRUSHES'||' '||'&'||' '||'ROLLERS' and a.STORE_ID='1059'";
-		SqlRowSet brushRollerRS = jdbcTemplate.queryForRowSet(brushRollerSql);
+		SqlRowSet brushRollerRS = jdbcTemplate
+				.queryForRowSet(SQL_BRUSHES_ROLLERS_DATA);
 		List<String> brushRollerList = new ArrayList<String>();
 		boolean brushRollerFlag = true;
 		while (brushRollerRS.next()) {
@@ -150,9 +150,8 @@ public class ReportDaoImpl implements ReportDao {
 				brushRollerList.add(" ");
 			}
 		}
-		String assocProdcutsSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='ASSOC PRODUCTS' and a.STORE_ID='1059'";
 		SqlRowSet assocProdcutsRS = jdbcTemplate
-				.queryForRowSet(assocProdcutsSql);
+				.queryForRowSet(SQL_ASSOC_PRODUCTS_DATA);
 		List<String> assocProdcutsList = new ArrayList<String>();
 		boolean assocProdcutsFlag = true;
 		while (assocProdcutsRS.next()) {
@@ -169,8 +168,8 @@ public class ReportDaoImpl implements ReportDao {
 				assocProdcutsList.add(" ");
 			}
 		}
-		String wallCoveringSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='WALL COVERING' and a.STORE_ID='1059'";
-		SqlRowSet wallCoveringRS = jdbcTemplate.queryForRowSet(wallCoveringSql);
+		SqlRowSet wallCoveringRS = jdbcTemplate
+				.queryForRowSet(SQL_WALL_COVERING_DATA);
 		List<String> wallCoveringList = new ArrayList<String>();
 		boolean wallCoveringFlag = true;
 		while (wallCoveringRS.next()) {
@@ -186,8 +185,8 @@ public class ReportDaoImpl implements ReportDao {
 				wallCoveringList.add(" ");
 			}
 		}
-		String windowTreatSql = "select a.* from phy_inv_sales_totals a,phy_inv_report_desc b where b.id=a.id and b.PRODUCT_TYPE='WINDOW TREATMENT' and a.STORE_ID='1059'";
-		SqlRowSet windowTreatRS = jdbcTemplate.queryForRowSet(windowTreatSql);
+		SqlRowSet windowTreatRS = jdbcTemplate
+				.queryForRowSet(SQL_WINDOW_TREAT_DATA);
 		List<String> windowTreatList = new ArrayList<String>();
 		boolean windowTreatFlag = true;
 		while (windowTreatRS.next()) {
@@ -203,7 +202,6 @@ public class ReportDaoImpl implements ReportDao {
 				windowTreatList.add(" ");
 			}
 		}
-		double total_ty = setArrayListElement(ty_sales_totals);
 
 		String desStr = "TY SALES $ ( 11/09 - 10/10 ),LY SALES $ ( 11/08 - 10/09 ) ,TY GM % ( 11/09 - 10/10 ) ,  LY GM % ( 11/08 - 10/09 ) , NET BOOK INVENTORY ,TINT USE ADJUSTMENT ,( + )  CLOSING REPORTS, \"A\"   CHRGD TO STORE-NOT RECVD( INT ) ,\"B\"   RECVD-NOT CHRGD TO STORE( EXT ) ,"
 				+ "\"C\"   RECVD-NOT CHRGD TO STORE( INT ) ,   \"D\"   OPEN IBARS/ISTS/EXPENSED MDSE TRAN , \"E\"   OPEN CHARGE-BACKS(EXT) ,\"F\"   CHRGD TO STORE-NOT RECVD( EXT ) , \"R\"   OPEN DOSCREPANCY REPORTS( EXT ) ,\"Z\"   OPEN MOUTH SALES REPORTS ,"
@@ -248,19 +246,6 @@ public class ReportDaoImpl implements ReportDao {
 		return map;
 	}
 
-	private Double setArrayListElement(List<String> ty_sales_totals)
-			throws NumberFormatException {
-		Double amount = (double) 0;
-		if (!CollectionUtils.isEmpty(ty_sales_totals)) {
-			for (int i = 0; i < ty_sales_totals.size(); i++) {
-				if (! StringUtils.isEmpty(ty_sales_totals.get(i))) {
-					amount = amount + Double.valueOf(ty_sales_totals.get(i));
-				}
-			}
-		}
-		return amount;
-	}
-
 	private String formatNumber(String string) {
 		String formateedString = " ";
 		if (null != string && string.length() > 0) {
@@ -298,8 +283,7 @@ public class ReportDaoImpl implements ReportDao {
 
 	@Override
 	public List<StoreProcess> getAllReport() {
-		String sql = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO where participating_store='Y'";
-		return jdbcTemplate.query(sql,
+		return jdbcTemplate.query(SQL_PARTICIPATING_STORES,
 				new ResultSetExtractor<List<StoreProcess>>() {
 					@Override
 					public List<StoreProcess> extractData(ResultSet rst)

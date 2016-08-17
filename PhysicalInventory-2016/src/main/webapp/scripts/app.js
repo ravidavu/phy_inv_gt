@@ -17,7 +17,8 @@ angular
     'ui.bootstrap',
 
     'ui.grid',
-    'ui.grid.pagination'
+    'ui.grid.pagination',
+    'ngDialog'
   ])
   .config(function ($urlRouterProvider, $stateProvider) {
 
