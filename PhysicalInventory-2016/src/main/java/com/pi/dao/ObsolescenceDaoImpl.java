@@ -26,12 +26,11 @@ public class ObsolescenceDaoImpl implements ObsolescenceDao {
 	private final static String SQL_GET_ALL_OBSOLES = "SELECT * FROM PHY_INV_OBSOLESCENCE";
 
 	private final static String SQL_INSERT_OBSOLES = "INSERT INTO PHY_INV_OBSOLESCENCE(STORE_NUMBER,STORE_SKU) VALUES (?,?)";
-	//private final static String SQL_TASKS_LOG_OBSOLES = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?)";
+	private final static String SQL_TASKS_LOG_OBSOLES = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID,ACTION_PERFORMED,UPDATED_VALUES) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?,?)";
 
 	private final static String SQL_DELETE_OBSOLES = "DELETE from PHY_INV_OBSOLESCENCE WHERE STORE_SKU = ?";
 
 	private final static String SQL_TASKS_PO_OBSOLES = "update PHY_INV_TASKS_PO set STATUS=? WHERE TASKS = ?";
-	private final static String SQL_TASKS_LOG_OBSOLES = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID,ACTION_PERFORMED,UPDATED_VALUES) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?,?)";
 
 	final Timestamp timeStamp = new java.sql.Timestamp(new Date().getTime());
 	@Autowired
