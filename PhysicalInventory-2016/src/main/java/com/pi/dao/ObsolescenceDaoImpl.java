@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -25,11 +26,12 @@ public class ObsolescenceDaoImpl implements ObsolescenceDao {
 	private final static String SQL_GET_ALL_OBSOLES = "SELECT * FROM PHY_INV_OBSOLESCENCE";
 
 	private final static String SQL_INSERT_OBSOLES = "INSERT INTO PHY_INV_OBSOLESCENCE(STORE_NUMBER,STORE_SKU) VALUES (?,?)";
-	private final static String SQL_TASKS_LOG_OBSOLES = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?)";
+	//private final static String SQL_TASKS_LOG_OBSOLES = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?)";
 
 	private final static String SQL_DELETE_OBSOLES = "DELETE from PHY_INV_OBSOLESCENCE WHERE STORE_SKU = ?";
 
 	private final static String SQL_TASKS_PO_OBSOLES = "update PHY_INV_TASKS_PO set STATUS=? WHERE TASKS = ?";
+	private final static String SQL_TASKS_LOG_OBSOLES = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID,ACTION_PERFORMED,UPDATED_VALUES) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?,?)";
 
 	final Timestamp timeStamp = new java.sql.Timestamp(new Date().getTime());
 	@Autowired
@@ -41,20 +43,21 @@ public class ObsolescenceDaoImpl implements ObsolescenceDao {
 
 	@Override
 	public Boolean createObsolence(final Obsolescence obs) {
+		List<String> createObsolenceList = new ArrayList<String>();
+		createObsolenceList.add(obs.getSkuNo());
 		Boolean result = jdbcTemplate.execute(SQL_INSERT_OBSOLES,
-				new PreparedStatementCallback<Boolean>() {
-					public Boolean doInPreparedStatement(PreparedStatement ps)
-							throws SQLException, DataAccessException {
-						ps.setInt(1, obs.getoId());
-						ps.setString(2, obs.getSkuNo());
-						return ps.execute();
-					}
-				});
+		new PreparedStatementCallback<Boolean>() {
+		public Boolean doInPreparedStatement(PreparedStatement ps)
+		throws SQLException, DataAccessException {
+		ps.setInt(1, obs.getoId());
+		ps.setString(2, obs.getSkuNo());
+		return ps.execute();
+		}
+		});
 
-		logData();
+		logData("Insert",createObsolenceList);
 		return result;
-	}
-
+		}
 	@Override
 	public List<Obsolescence> getAllObsolence() {
 		return jdbcTemplate.query(SQL_GET_ALL_OBSOLES,
@@ -81,8 +84,8 @@ public class ObsolescenceDaoImpl implements ObsolescenceDao {
 
 	@Override
 	public void deleteObsolence(Obsolescence obsolence) {
+		final List<String> delObsoList = obsolence.getSkuNoList();
 		try {
-			final List<String> delObsoList = obsolence.getSkuNoList();
 			jdbcTemplate.batchUpdate(SQL_DELETE_OBSOLES,
 					new BatchPreparedStatementSetter() {
 						public void setValues(PreparedStatement ps, int i)
@@ -99,14 +102,14 @@ public class ObsolescenceDaoImpl implements ObsolescenceDao {
 			e.printStackTrace();
 		}
 
-		logData();
+		logData("DELETE",delObsoList);
 	}
 
-	private void logData() {
+
+	private void logData(String action, List<String> data) {
 		int task_id = getTaskIdForObso();
-		jdbcTemplate.update(SQL_TASKS_LOG_OBSOLES, timeStamp, task_id);
-		jdbcTemplate.update(SQL_TASKS_PO_OBSOLES, "SAVED",
-				"Forced Obsolescence");
+		jdbcTemplate.update(SQL_TASKS_LOG_OBSOLES, timeStamp, task_id, action,StringUtils.join(data,','));
+		jdbcTemplate.update(SQL_TASKS_PO_OBSOLES, "SAVED","Forced Obsolescence");
 	}
 
 	private int getTaskIdForObso() {

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -23,15 +24,15 @@ import com.pi.model.StoreProcess;
 @Repository("processDao")
 public class ProcessDaoImpl implements ProcessDao {
 
-	private final static String SQL_UPDATE_STORES_PO_Y = "UPDATE PHY_INV_STORES_PO SET PARTICIPATING_STORE='Y',UPDATED_DATE=?,INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
-	private final static String SQL_UPDATE_STORES_PO_N = "UPDATE PHY_INV_STORES_PO SET PARTICIPATING_STORE='N',UPDATED_DATE=?, INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
+	private final static String SQL_UPDATE_STORES_PO_Y = "UPDATE PHY_INV_STORES_TAKING SET PARTICIPATING_STORE='Y',UPDATED_DATE=?,INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
+	private final static String SQL_UPDATE_STORES_PO_N = "UPDATE PHY_INV_STORES_TAKING SET PARTICIPATING_STORE='N',UPDATED_DATE=?, INV_RUN_DATE = ? WHERE STORE_NUMBER=?";
 	private final static String SQL_TASKS_PO = "UPDATE PHY_INV_TASKS_PO SET STATUS=? WHERE TASKS = ?";
 
-	private final static String SQL_TASKS_LOG = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?)";
+	private final static String SQL_TASKS_LOG = "INSERT INTO PHY_INV_TASKS_LOG(ID, CREATED_DATE,TASK_ID,ACTION_PERFORMED,UPDATED_VALUES) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?,?)";
 	private final static String SQL_STORE_REQUEST_ID = "INSERT INTO PHY_INV_TASKS_LOG(ID, REQUEST_ID,CREATED_DATE,TASK_ID) VALUES(TASKS_LOG_SEQ.NEXTVAL,?,?,?)";
 
-	private final static String SQL_ALL_STORES_PO = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO";
-	private final static String SQL_GET_ALL_SELECTED_STORES = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_PO where participating_store='Y'";
+	private final static String SQL_ALL_STORES_PO = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_TAKING";
+	private final static String SQL_GET_ALL_SELECTED_STORES = "SELECT STORE_NUMBER,PARTICIPATING_STORE FROM PHY_INV_STORES_TAKING where participating_store='Y'";
 	private final static String SQL_GET_TASK_ID_WITH_STR_TAKING_DATA = "SELECT TASK_ID FROM PHY_INV_TASKS_PO WHERE TASKS = 'Stores Taking Data'";
 
 	ResultSet rst = null;
@@ -74,6 +75,13 @@ public class ProcessDaoImpl implements ProcessDao {
 							return stNoList.size();
 						}
 					});
+			// update to the log table
+			int task_id = getTaskId();
+			jdbcTemplate.update(SQL_TASKS_LOG, timeStamp, task_id, "SELECTED",
+					StringUtils.join(unselctedList, ','));
+			// update the tasks_po_table
+			jdbcTemplate.update(SQL_TASKS_PO, "SAVED", "Stores Taking Data");
+			System.out.println("updated in PHY_INV_TASKS_LOG table ");
 		}
 
 		if (null != unselctedList && unselctedList.size() > 0) {
@@ -93,13 +101,14 @@ public class ProcessDaoImpl implements ProcessDao {
 							return unselctedList.size();
 						}
 					});
+//			// update to the log table
+//			int task_id = getTaskId();
+//			jdbcTemplate.update(SQL_TASKS_LOG, timeStamp, task_id, "updated",
+//					StringUtils.join(unselctedList, ','));
+//			// update the tasks_po_table
+//			jdbcTemplate.update(SQL_TASKS_PO, "SAVED", "Stores Taking Data");
+//			System.out.println("updated in PHY_INV_TASKS_LOG table ");
 		}
-		// update to the log table
-		int task_id = getTaskId();
-		jdbcTemplate.update(SQL_TASKS_LOG, timeStamp, task_id);
-		// update the tasks_po_table
-		jdbcTemplate.update(SQL_TASKS_PO, "SAVED", "Stores Taking Data");
-		System.out.println("updated in PHY_INV_TASKS_LOG table ");
 	}
 
 	@Override
